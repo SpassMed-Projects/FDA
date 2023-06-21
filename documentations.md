@@ -9,3 +9,5 @@ FDA mind map: https://lucid.app/lucidchart/a6c82393-1b5d-4382-be04-f4613618f1ee/
 FDA specification excel: https://docs.google.com/spreadsheets/d/1rc-12bghmWtC33HZnwCrpRCV0OcSyv-K/edit#gid=265856726
 
 Contribution regularitions and process: https://docs.google.com/document/d/1E-tUlx2ZLNZPWXAGOUPALIXy1gPpFp9nsC3ml0D9uaU/edit
+
+Folder structure: https://medium.com/analytics-vidhya/folder-structure-for-machine-learning-projects-a7e451a8caaa
