@@ -1,11 +1,57 @@
-## precisionFDA ##
+FDA
+==============================
 
-https://precision.fda.gov/challenges/31#participation-in-the-challenge
+A short description of the project.
 
-FDA pipeline: https://lucid.app/lucidchart/e1301710-cc7e-4568-9499-06e90d887b04/edit?viewport_l[…]1473%2C0_0&invitationId=inv_45ffb64e-4b4f-4592-97f4-63aacac4b417
+Project Organization
+------------
 
-FDA mind map: https://lucid.app/lucidchart/a6c82393-1b5d-4382-be04-f4613618f1ee/edit?viewport_l[…]1100%2C0_0&invitationId=inv_d7a7e4df-7674-49d3-baf5-00649f5370cf
+    ├── LICENSE
+    ├── Makefile           <- Makefile with commands like `make data` or `make train`
+    ├── README.md          <- The top-level README for developers using this project.
+    ├── data
+    │   ├── external       <- Data from third party sources.
+    │   ├── interim        <- Intermediate data that has been transformed.
+    │   ├── processed      <- The final, canonical data sets for modeling.
+    │   └── raw            <- The original, immutable data dump.
+    │
+    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    │
+    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    │
+    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
+    │                         the creator's initials, and a short `-` delimited description, e.g.
+    │                         `1.0-jqp-initial-data-exploration`.
+    │
+    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+    │
+    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+    │   └── figures        <- Generated graphics and figures to be used in reporting
+    │
+    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
+    │                         generated with `pip freeze > requirements.txt`
+    │
+    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
+    ├── src                <- Source code for use in this project.
+    │   ├── __init__.py    <- Makes src a Python module
+    │   │
+    │   ├── data           <- Scripts to download or generate data
+    │   │   └── make_dataset.py
+    │   │
+    │   ├── features       <- Scripts to turn raw data into features for modeling
+    │   │   └── build_features.py
+    │   │
+    │   ├── models         <- Scripts to train models and then use trained models to make
+    │   │   │                 predictions
+    │   │   ├── predict_model.py
+    │   │   └── train_model.py
+    │   │
+    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │       └── visualize.py
+    │
+    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
-FDA specification excel: https://docs.google.com/spreadsheets/d/1rc-12bghmWtC33HZnwCrpRCV0OcSyv-K/edit#gid=265856726
 
-Contribution regularitions and process: https://docs.google.com/document/d/1E-tUlx2ZLNZPWXAGOUPALIXy1gPpFp9nsC3ml0D9uaU/edit
+--------
+
+<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
