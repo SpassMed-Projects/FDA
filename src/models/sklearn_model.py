@@ -16,6 +16,7 @@ Imported from SKLearn library
 import argparse
 import os
 from scipy.stats import ttest_rel
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import f_classif
@@ -38,7 +39,62 @@ classifiers = [SGDClassifier(), \
         AdaBoostClassifier()]
 
 
+# def build_DT_model( ## TODO: Fix this! 
+#     training,
+#     validation,
+#     input_length: int,
+#     prediction_front: int,
+#     prediction_back: int,
+#     max_n_epochs: int,
+#     nr_epochs_val_period: int,
+#     batch_size: int,
+    
+#     num_blocks: int,
+#     num_stacks: int,
+#     num_layers: int,
+#     layer_widths: int,
+#     activation: list[str],
+#     callbacks: list=None,
+#     model_name: str = None,
+#     gpu_num: list[int] = [0], 
+#     logger=None
+#     ):
 
+
+#     model_DT = DecisionTreeClassifier(
+#         input_chunk_length=int(input_length/5),
+#         output_chunk_length=int((prediction_front+prediction_back)/5),
+#         num_stacks=num_stacks,
+#         num_blocks=num_blocks,
+#         num_layers=num_layers,
+#         layer_widths=layer_widths,
+#         activation=activation,
+#         MaxPool1d = True,
+#         n_epochs=max_n_epochs,
+#         nr_epochs_val_period=nr_epochs_val_period,
+#         batch_size=batch_size,
+#         model_name=model_name,
+#         loss_fn=path_soft_dtw.PathDTWBatch.apply,
+#         pl_trainer_kwargs={
+#             "accelerator": "gpu",
+#             "devices": gpu_num,
+#             # "auto_select_gpus": True,
+#             "callbacks": callbacks, 
+#             "logger":logger,
+#             },
+#         force_reset=True,
+#         save_checkpoints=True,
+#     )
+
+#     # train the model
+#     model_DT.fit(
+#         series=training,
+#         val_series=validation,
+#         verbose=True)
+
+#     best_model_nhits =  model_DT.load_from_checkpoint(model_name)
+
+#     return best_model_nhits
 
 """
 
