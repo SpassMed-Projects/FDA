@@ -11,4 +11,3 @@ def preprocess_time_string(timeStr):
     date_obj = datetime.strptime(timeStr, date_format)
     return date_obj
 
-
