@@ -11,7 +11,8 @@ def preprocess_time_string(timeStr):
     date_obj = datetime.strptime(timeStr, date_format)
     return date_obj
 
-def gi(dictReplacement, dfColumn):
+def preprocess_combine_categories(dictReplacement, dfColumn):
     for i in range(len(dfColumn)):
+        print(dfColumn[i])
         dfColumn[i] = dictReplacement[dfColumn[i]]
     return dfColumn
