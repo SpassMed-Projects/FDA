@@ -11,3 +11,7 @@ def preprocess_time_string(timeStr):
     date_obj = datetime.strptime(timeStr, date_format)
     return date_obj
 
+def gi(dictReplacement, dfColumn):
+    for i in range(len(dfColumn)):
+        dfColumn[i] = dictReplacement[dfColumn[i]]
+    return dfColumn
