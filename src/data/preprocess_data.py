@@ -4,6 +4,7 @@ import numpy as np
 from tqdm.auto import tqdm
 
 from datetime import datetime
+from scipy import interpolate
 
 def preprocess_time_string(timeStr):
     timeStr = timeStr[:-2]
@@ -12,7 +13,15 @@ def preprocess_time_string(timeStr):
     return date_obj
 
 def preprocess_combine_categories(dictReplacement, dfColumn):
+    newCol = []
     for i in range(len(dfColumn)):
-        print(dfColumn[i])
-        dfColumn[i] = dictReplacement[dfColumn[i]]
+        newCol.append(dictReplacement[dfColumn[i]])
+    return newCol
+
+def imputate_nan_binary(dfColumn):
+    p = dfColumn.value_counts()[1] / len(dfColumn)
+    for i in range(len(dfColumn)):
+        if pd.isnull(dfColumn[i]):
+            dfColumn[i] = np.random.binomial(1, p, 1)
     return dfColumn
+    
