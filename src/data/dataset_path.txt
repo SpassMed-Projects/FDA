@@ -5,3 +5,5 @@
 
 /home/daisy/FDA_Dataset/inpatients_with_readm.csv: inpatient admission all features included with hospital readmission
 
+/home/vivi/FDA_datasets/inpatient_demographics_event.csv: preprocessed demographic static merge inpatient admission
+
