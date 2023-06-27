@@ -1,0 +1,7 @@
+/home/daisy/FDA_Dataset/demograph_static_inpatient_label_dummies.csv: demographic static merge inpatient admission, 
+                                                                      with all demographics encoded with label(i.e. Veteran flag_Code) and one-hot(i.e. Veteran flag_Yes, Veteran flag_No)
+
+/home/daisy/FDA_Dataset/demographics_static_clean.csv: demographic static only, races have been merged into three groups: white, black or africa,and other
+
+/home/daisy/FDA_Dataset/inpatients_with_readm.csv: inpatient admission all features included with hospital readmission
+
