@@ -7,6 +7,3 @@
 
 /home/vivi/FDA_datasets/inpatient_demographics_event.csv: preprocessed demographic static merge inpatient admission
 
-/home/vivi/FDA_datasets/demographics_event_preprocessed.csv: preprocessed demographic static data
-
-/home/vivi/FDA_datasets/measurements_blood_pressure_preprocessed: preprocessed measurements blood pressure data
