@@ -14,3 +14,5 @@
 /home/hassan/lily/MLA/FDA/inpatient_admission_withtarget.csv: inpatient_admission dataset with targets: cardiovascular and readmission
 
 /home/vivi/FDA_datasets/demographics_event_preprocessed.csv: preprocessed demographic static data
+
+/home/vivi/FDA_datasets/state_number_of_hospitals.csv: number of hospitals in different states in the U.S.
