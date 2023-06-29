@@ -9,3 +9,8 @@
 
 /home/hassan/lily/MLA/FDA/inpatient_admission_complete.csv: balanced (w.r.t. readmission) inpatient admission table with one-hot encoding, scaled feature, binary targets
 
+/home/vivi/FDA_datasets/measurements_blood_pressure_preprocessed: preprocessed measurements blood pressure data
+
+/home/hassan/lily/MLA/FDA/inpatient_admission_withtarget.csv: inpatient_admission dataset with targets: cardiovascular and readmission
+
+/home/vivi/FDA_datasets/demographics_event_preprocessed.csv: preprocessed demographic static data
