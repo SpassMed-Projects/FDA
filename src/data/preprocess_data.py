@@ -3,6 +3,7 @@ import os
 import numpy as np
 from tqdm.auto import tqdm
 
+import csv
 from datetime import datetime
 from scipy import interpolate
 
@@ -24,4 +25,12 @@ def imputate_nan_binary(dfColumn):
         if pd.isnull(dfColumn[i]):
             dfColumn[i] = np.random.binomial(1, p, 1)
     return dfColumn
-    
+
+def generate_dict_from_csv(csvName,keyName,valueName):
+    reader = pd.read_csv(csvName)
+    mydict = {}
+    for row in reader.iterrows():
+        mydict[row[keyName]] = row[valueName]
+    return mydict
+
+
