@@ -16,3 +16,5 @@
 /home/vivi/FDA_datasets/demographics_event_preprocessed.csv: preprocessed demographic static data
 
 /home/vivi/FDA_datasets/state_number_of_hospitals.csv: number of hospitals in different states in the U.S. https://www.ahd.com/state_statistics.html
+
+/home/hassan/lily/MLA/FDA/Number_lab_results.csv: Number of lab results for each patient
