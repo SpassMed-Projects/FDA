@@ -8,6 +8,8 @@ from datetime import datetime
 from scipy import interpolate
 
 def preprocess_time_string(timeStr):
+    if pd.isnull(timeStr):
+        return None
     timeStr = timeStr[:-2]
     date_format = '%Y-%m-%d %H:%M:%S'
     date_obj = datetime.strptime(timeStr, date_format)
