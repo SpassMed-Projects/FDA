@@ -15,7 +15,7 @@ def preprocess_time_string(timeStr):
     date_obj = datetime.strptime(timeStr, date_format)
     return date_obj
 
-def preprocess_combine_categories(dictReplacement, dfColumn):
+def preprocess_substitute_categories(dictReplacement, dfColumn):
     newCol = []
     for i in range(len(dfColumn)):
         newCol.append(dictReplacement[dfColumn[i]])
@@ -31,7 +31,7 @@ def imputate_nan_binary(dfColumn):
 def generate_dict_from_csv(csvName,keyName,valueName):
     reader = pd.read_csv(csvName)
     mydict = {}
-    for row in reader.iterrows():
+    for index, row in reader.iterrows():
         mydict[row[keyName]] = row[valueName]
     return mydict
 
