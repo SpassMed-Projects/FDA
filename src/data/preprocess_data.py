@@ -9,7 +9,7 @@ from scipy import interpolate
 
 def preprocess_time_string(timeStr):
     if pd.isnull(timeStr):
-        return None
+        return float('nan')
     timeStr = timeStr[:-2]
     date_format = '%Y-%m-%d %H:%M:%S'
     date_obj = datetime.strptime(timeStr, date_format)
@@ -18,7 +18,10 @@ def preprocess_time_string(timeStr):
 def preprocess_substitute_categories(dictReplacement, dfColumn):
     newCol = []
     for i in range(len(dfColumn)):
-        newCol.append(dictReplacement[dfColumn[i]])
+        if dfColumn[i] in dictReplacement:
+            newCol.append(dictReplacement[dfColumn[i]])
+        else: 
+            newCol.append(float('nan'))
     return newCol
 
 def imputate_nan_binary(dfColumn):
@@ -34,5 +37,6 @@ def generate_dict_from_csv(csvName,keyName,valueName):
     for index, row in reader.iterrows():
         mydict[row[keyName]] = row[valueName]
     return mydict
+
 
 
