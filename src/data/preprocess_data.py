@@ -31,12 +31,15 @@ def imputate_nan_binary(dfColumn):
             dfColumn[i] = np.random.binomial(1, p, 1)
     return dfColumn
 
-def generate_dict_from_csv(csvName,keyName,valueName):
-    reader = pd.read_csv(csvName)
+def generate_dict_from_csv(csvPath,keyName,valueName):
+    reader = pd.read_csv(csvPath)
     mydict = {}
     for index, row in reader.iterrows():
         mydict[row[keyName]] = row[valueName]
     return mydict
+
+def impute_with_RF():
+    pass
 
 
 
