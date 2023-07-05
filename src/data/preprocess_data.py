@@ -41,5 +41,20 @@ def generate_dict_from_csv(csvPath,keyName,valueName):
 def impute_with_RF():
     pass
 
+def get_period(startCol,endCol):
+    periodCol = []
+    length = len(startCol)
+    for i in range(length):
+        start = startCol[i]
+        end = endCol[i]
+        if pd.isnull(start) or pd.isnull(end):
+            periodCol.append(float('nan'))
+        else:
+            periodCol.append(end - start)
+    return periodCol
+
+
+        
+
 
 
