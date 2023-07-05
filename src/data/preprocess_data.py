@@ -53,7 +53,12 @@ def get_period(startCol,endCol):
             periodCol.append(end - start)
     return periodCol
 
-
+def imputate_nan_period_mean(periodCol):
+    avg = periodCol.mean()
+    for i in range(len(periodCol)):
+        if pd.isnull(periodCol[i]):
+            periodCol[i] = avg
+    return periodCol
         
 
 
