@@ -60,6 +60,13 @@ def imputate_nan_period_mean(periodCol):
             periodCol[i] = avg
     return periodCol
         
+def imputate_nan_end_date(startCol, endCol, periodCol):
+    avg = periodCol.mean()
+    for i in range(len(endCol)):
+        if pd.isnull(endCol[i]):
+            endCol[i] = avg + startCol[i]
+    return endCol
+
 
 
 
