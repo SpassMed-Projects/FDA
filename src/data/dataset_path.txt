@@ -18,3 +18,7 @@
 /home/vivi/FDA_datasets/state_number_of_hospitals.csv: number of hospitals in different states in the U.S. https://www.ahd.com/state_statistics.html
 
 /home/hassan/lily/MLA/FDA/lab_results_features.csv: Columns: id, num_of_lab_results, frequency
+
+/home/vivi/FDA_datasets/outpaitent_state.csv: all patient withe their state
+
+/home/vivi/FDA_datasets/measurements_bp_preprocessed.csv: preprocessed
