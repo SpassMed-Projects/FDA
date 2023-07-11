@@ -19,7 +19,7 @@
 
 /home/hassan/lily/MLA/FDA/lab_results_features.csv: Columns: id, num_of_lab_results, frequency
 
-/home/vivi/FDA_datasets/outpaitent_state.csv: all patient withe their state
+/home/vivi/FDA_datasets/outpatient_state.csv: all patient withe their state
 
 /home/vivi/FDA_datasets/measurements_bp_preprocessed.csv: preprocessed
 
