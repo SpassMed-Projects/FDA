@@ -26,3 +26,9 @@
 '/home/vivi/FDA_datasets/demographics_event_preprocessed.csv: preprocessed
 
 /home/vivi/FDA_datasets/inpatient_specialty_preprocessed.csv: preprocessed
+
+/home/hassan/lily/MLA/FDA/ed_visits_full.csv: final ed_visits clean dataset
+
+/home/hassan/lily/MLA/FDA/inpatient_full.csv: final inpatient clean dataset
+
+/home/hassan/lily/MLA/FDA/lab_results_features.csv: final lab_results clean dataset
