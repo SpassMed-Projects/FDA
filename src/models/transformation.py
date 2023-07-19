@@ -42,22 +42,101 @@ from sklearn.model_selection import train_test_split
 
 # http://blog.hubwiz.com/2019/09/24/scikit-learn-pipeline-guide/
 
-class CustomTransformer(BaseEstimator, TransformerMixin):
-  def __init__(self, feature_name, additional_param = "SM"):  
-    print('\n...intializing\n')
+class removeSkewnessKurtosis(BaseEstimator, TransformerMixin):
+  def __init__(self, feature_name, targets, cat_cols, numeric_cols, log_numeric_cols):  
     self.feature_name = feature_name
-    self.additional_param = additional_param
- 
+    self.targets = targets
+    self.cat_cols = cat_cols
+    self.numeric_cols = numeric_cols
+    self.log_numeric_cols = log_numeric_cols
+  
+  def check_skewness(self, X):
+    statusdf = pd.DataFrame()
+    statusdf['numeric_col'] = self.numeric_cols
+    transform = []
+    sknewness_before = []
+    kurtosis_before = []
+    std_before = []
+    
+    skewness_after = []
+    kurtosis_after = []
+    std_after = []
+
+    method = []
+    for i in self.numeric_cols:
+        if abs(X[i].skew()) > 1.96 and abs(X[i].kurtosis()) > 1.96:
+            transform.append('Yes')
+            sknewness_before.append(X[i].skew())
+            kurtosis_before.append(X[i].kurtosis())
+            std_before.append(X[i].std())
+
+            skewness_after.append(np.log1p(X[X[i] >= 0][i]).skew())
+            kurtosis_after.append(np.log1p(X[X[i] >= 0][i]).kurtosis())
+            std_after.append(np.log1p(X[X[i] >= 0][i]).std())
+
+            method.append('log')
+        else:
+            transform.append('No')
+            sknewness_before.append(X[i].skew())
+            kurtosis_before.append(X[i].kurtosis())
+            std_before.append(X[i].std())
+
+            skewness_after.append(X[i].skew())
+            kurtosis_after.append(X[i].kurtosis())
+            std_after.append(X[i].std())
+            method.append(' ')
+
+    statusdf['transform'] = transform
+    statusdf['method'] = method
+    statusdf['sknewness_before'] = sknewness_before
+    statusdf['skewness_after'] = skewness_after
+
+    statusdf['kurtosis_before'] = kurtosis_before
+    statusdf['kurtosis_after'] = kurtosis_after
+    
+    statusdf['std_before'] = std_before
+    statusdf['std_after'] = std_after
+    return statusdf
+  
+  def remove_skewness(self, X):
+    statusdf = self.check_skewness(X)
+    for i in range(len(statusdf)):
+        if statusdf['transform'][i] == 'Yes':
+            colname = str(statusdf['numeric_col'][i])
+            
+            # will lose information here,
+            # For np.log() has 'inf', and we will not consider 'inf'
+            #df[colname + "_log"] = np.log1p(df[df[colname] >= 0][colname])
+            X[colname + "_log"] = np.log1p(X[colname])
+    return X
+
+  def extract_log_col(self, X):
+    df_log = self.remove_skewness(X)
+    log_cols = ['Internalpatientid'] + self.log_numeric_cols + self.cat_cols
+    df_log = df_log[log_cols]
+    return df_log
+
   def fit(self, X, y = None):
-    print('\nfiting data...\n')
-    print(f'\n \U0001f600  {self.additional_param}\n')
     return self
  
   def transform(self, X, y = None):
-    print('\n...transforming data \n')
-    X_ = X.copy()
-    X_[self.feature_name] = np.log(X_[self.feature_name])
-    return X
+    return self.extract_log_col(X)
+  
+class ModelTransformer(TransformerMixin):
+  def __init__(self, model):
+    self.model = model
+
+  def fit(self, *args, **kwargs):
+    self.model.fit(*args, **kwargs)
+    return self
+
+  def transform(self, X, **transform_params):
+    return DataFrame(self.model.predict(X))
+
+
+
+
+    
   
 print("creating second pipeline...")
 pipe2 = Pipeline(steps=[
