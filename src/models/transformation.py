@@ -14,6 +14,7 @@ from sklearn.model_selection import cross_val_score
 
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.preprocessing import StandardScaler, RobustScaler
 
 import argparse
 
@@ -38,11 +39,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
-
-
-# http://blog.hubwiz.com/2019/09/24/scikit-learn-pipeline-guide/
-
-class removeSkewnessKurtosis(BaseEstimator, TransformerMixin):
+class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
   def __init__(self, feature_name, targets, cat_cols, numeric_cols, log_numeric_cols):  
     self.feature_name = feature_name
     self.targets = targets
@@ -122,29 +119,21 @@ class removeSkewnessKurtosis(BaseEstimator, TransformerMixin):
   def transform(self, X, y = None):
     return self.extract_log_col(X)
   
-class ModelTransformer(TransformerMixin):
-  def __init__(self, model):
-    self.model = model
+class Standardize(BaseEstimator, TransformerMixin):
+  def __init__(self, cols, scalar):
+    self.cols = cols
+    self.scalar = scalar
 
-  def fit(self, *args, **kwargs):
-    self.model.fit(*args, **kwargs)
+  def rob_scale_numeric_data(self, X, cols):
+    for i in cols:
+        #new_i =  rob_scaler.fit_transform(df[i].values.reshape(-1,1))
+        X[i] = self.scalar.fit_transform(X[i].values.reshape(-1,1))
+        X = X.rename(columns = {i:i+ "_rob_scaled"})
+    return X
+
+  def fit(self, X, y = None):
     return self
-
-  def transform(self, X, **transform_params):
-    return DataFrame(self.model.predict(X))
-
-
-
-
-    
   
-print("creating second pipeline...")
-pipe2 = Pipeline(steps=[
-                       ('experimental_trans', CustomTransformer('bmi')),
-                       ('linear_model', LinearRegression())
-])
- 
-print("fiting pipeline 2")
-pipe2.fit(X_train, y_train)
-preds2 = pipe2.predict(X_test)
-print(f"RMSE: {np.sqrt(mean_squared_error(y_test, preds2))}\n")
+  def transform(self, X):
+    return self.rob_scale_numeric_data(X,self.cols)
+
