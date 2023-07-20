@@ -43,11 +43,8 @@ from transformation import RemoveSkewnessKurtosis, Standardize
 
 # Split Train and Test
 
+
 # Transform Data
-
-
-
-
 
 
 print("creating second pipeline...")
