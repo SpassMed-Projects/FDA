@@ -7,12 +7,23 @@ Metrics include:
 https://sinyi-chou.github.io/python-sklearn-precision-recall/
 '''
 
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import average_precision_score, precision_recall_curve
+from sklearn.metrics import auc, plot_precision_recall_curve
+import matplotlib.pyplot as plt
+
 import numpy as np
 np.random.seed(401)
 
 
-def get_AUPRC():
-    pass
+def get_AUPRC(y_test, y_score):
+    average_precision_score(y_test, y_score)
+    precision, recall, thresholds = precision_recall_curve(y_test, y_score)
+    # Use AUC function to calculate the area under the curve of precision recall curve
+    auc_precision_recall = auc(recall, precision)
+    print(auc_precision_recall)
     
 
 def get_AUROC():
