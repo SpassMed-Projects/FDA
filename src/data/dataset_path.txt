@@ -36,3 +36,5 @@
 /home/daisy/FDA_Dataset/inpatient_all_final_1.csv: inpatient left join other tables with 25803 missing values
 
 /home/daisy/FDA_Dataset/inpatient_all_final_2.csv: inpatient inner join other tables with 1656 missing values
+
+/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
