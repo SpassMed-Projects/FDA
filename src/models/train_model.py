@@ -42,6 +42,23 @@ from sklearn.model_selection import train_test_split
 from transformation import RemoveSkewnessKurtosis, Standardize
 
 # Split Train and Test
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+steps = [('scalar', StandardScaler()),
+         ('SVM', SVC())]
+pipeline = Pipeline(steps)
+parameters = {'SVM__C':[1, 10, 100],
+              'SVM__gamma':[0.1, 0.01]}
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,random_state = 1)
+cv = GridSearchCV(pipeline,param_grid=parameters,cv=3)
+cv.fit(x_train,y_train)
+
+y_pred = cv.predict(x_test)
+
+print("Accuracy: {}".format(cv.score(x_test, y_test)))
+print("Tuned Model Parameters: {}".format(cv.best_params_))
+
 
 
 # Transform Data
