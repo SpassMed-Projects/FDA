@@ -27,8 +27,6 @@
 
 /home/vivi/FDA_datasets/inpatient_specialty_preprocessed.csv: preprocessed
 
-/home/hassan/lily/MLA/FDA/ed_visits_full.csv: final ed_visits clean dataset
-
 /home/hassan/lily/MLA/FDA/inpatient_full.csv: final inpatient clean dataset
 
 /home/hassan/lily/MLA/FDA/lab_results_features.csv: final lab_results clean dataset
@@ -48,3 +46,7 @@
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv: testset (updated inpatient lab results)
+
+/home/hassan/lily/MLA/FDA/ed_visits_full.csv: final ed_visits clean dataset (with death)
+
+/home/hassan/lily/MLA/FDA/ed_visits_test.csv: testset (final ed_visits clean dataset (with death))
