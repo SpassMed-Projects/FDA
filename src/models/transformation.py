@@ -40,8 +40,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
-  def __init__(self, feature_name, targets, cat_cols, numeric_cols, log_numeric_cols):  
-    self.feature_name = feature_name
+  def __init__(self, targets, cat_cols, numeric_cols, log_numeric_cols):  
     self.targets = targets
     self.cat_cols = cat_cols
     self.numeric_cols = numeric_cols
@@ -113,10 +112,10 @@ class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
     df_log = df_log[log_cols]
     return df_log
 
-  def fit(self, X, y = None):
+  def fit(self, X,  y=None):
     return self
  
-  def transform(self, X, y = None):
+  def transform(self, X):
     return self.extract_log_col(X)
   
 class Standardize(BaseEstimator, TransformerMixin):
@@ -126,12 +125,11 @@ class Standardize(BaseEstimator, TransformerMixin):
 
   def rob_scale_numeric_data(self, X, cols):
     for i in cols:
-        #new_i =  rob_scaler.fit_transform(df[i].values.reshape(-1,1))
         X[i] = self.scalar.fit_transform(X[i].values.reshape(-1,1))
         X = X.rename(columns = {i:i+ "_rob_scaled"})
     return X
 
-  def fit(self, X, y = None):
+  def fit(self, X,  y=None):
     return self
   
   def transform(self, X):

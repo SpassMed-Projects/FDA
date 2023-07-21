@@ -41,36 +41,71 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from transformation import RemoveSkewnessKurtosis, Standardize
 
-# Split Train and Test
+
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-steps = [('scalar', StandardScaler()),
-         ('SVM', SVC())]
-pipeline = Pipeline(steps)
-parameters = {'SVM__C':[1, 10, 100],
-              'SVM__gamma':[0.1, 0.01]}
-x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2,random_state = 1)
-cv = GridSearchCV(pipeline,param_grid=parameters,cv=3)
-cv.fit(x_train,y_train)
 
-y_pred = cv.predict(x_test)
+# Import Data
+path = '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv'
+df1 = pd.read_csv(path).iloc[:,1:]
+df1.drop(columns = ['Veteran flag','Event date','Marital status', 'Marital status encoded',
+                    'State','Ruca category'], inplace=True)
+X_admission1 = df1.drop(columns = ['Readmission', 'Died'])
+Y_admission1 = df1[['Readmission']]
 
-print("Accuracy: {}".format(cv.score(x_test, y_test)))
-print("Tuned Model Parameters: {}".format(cv.best_params_))
-
-
+# Split Train and Test
+X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
 
 # Transform Data
+targets = ['Readmission', 'Died']
 
+cat_cols = ['AO', 'CVD', 'Ruca category encoded', 'Ethnicity', 
+            'Gender', 'Races', 'Ethnicity_0',
+            'Ethnicity_1', 'Ethnicity_2', 'Races_0', 
+            'Races_1', 'Races_2', 'Races_3','DOMICILIARY', 
+            'MEDICINE', 'NHCU', 'NON-COUNT', 'OTHERS', 'PSYCHIATRY']
 
-print("creating second pipeline...")
-pipe2 = Pipeline(steps=[
-                       ('experimental_trans', CustomTransformer('bmi')),
-                       ('linear_model', LinearRegression())
-])
- 
-print("fiting pipeline 2")
-pipe2.fit(X_train, y_train)
-preds2 = pipe2.predict(X_test)
-print(f"RMSE: {np.sqrt(mean_squared_error(y_test, preds2))}\n")
+numeric_cols = ['num_stays', 'stay_length', 'num_unique_units',
+       'num_transfers', 'num_cvd_readmission', 'unique_admitting_specialty', 
+       'unique_discharging_specialty','Age 20-40', 'Age 40-60', 'Age 60-80', 'Age 80-100',
+       'Age 100-120', 'age_mean', 'age_std', 'age_min', 'age_max', 'stay_min',
+       'stay_max', 'stay_mean', 'stay_std', 'freq', 'total_procedure',
+       'num_surgery_pro', 'num_immunization', 'Num med per admission mean',
+       'Num med per admission min', 'Num med per admission max',
+       'Total medications', 'mean age at specailty', 'period mean', 
+       'specialty medical count', 'specialty support count',
+       'period std','specialty count', 'Age 20-40 hypotension',
+       'Age 40-60 hypotension', 'Age 60-80 hypotension',
+       'Age 80-100 hypotension', 'Age 100-120 hypotension',
+       'Age 20-40 hypertension', 'Age 40-60 hypertension',
+       'Age 60-80 hypertension', 'Age 80-100 hypertension',
+       'Age 100-120 hypertension', 'Age 20-40 healthy', 'Age 40-60 healthy',
+       'Age 60-80 healthy', 'Age 80-100 healthy', 'Age 100-120 healthy',
+       'lab_count', 'lab_freq', 'lab_age_mean', 'lab_age_std']
+
+log_numeric_cols = ['num_stays_log', 'stay_length_log',
+       'num_transfers_log', 'num_cvd_readmission_log',
+       'unique_admitting_specialty_log', 'Age 20-40_log', 'Age 40-60_log',
+       'Age 60-80_log', 'Age 80-100_log', 'Age 100-120_log', 'stay_min_log',
+       'stay_max_log', 'stay_mean_log', 'stay_std_log', 'freq_log',
+       'total_procedure_log', 'num_surgery_pro_log',
+       'Num med per admission mean_log', 'Num med per admission min_log',
+       'Num med per admission max_log', 'Total medications_log',
+       'period mean_log', 'specialty medical count_log',
+       'specialty support count_log', 'period std_log', 'specialty count_log',
+       'Age 20-40 hypotension_log', 'Age 40-60 hypotension_log',
+       'Age 60-80 hypotension_log', 'Age 80-100 hypotension_log',
+       'Age 100-120 hypotension_log', 'Age 20-40 hypertension_log',
+       'Age 40-60 hypertension_log', 'Age 60-80 hypertension_log',
+       'Age 80-100 hypertension_log', 'Age 100-120 hypertension_log',
+       'Age 20-40 healthy_log', 'Age 40-60 healthy_log',
+       'Age 60-80 healthy_log', 'Age 80-100 healthy_log',
+       'Age 100-120 healthy_log', 'lab_count_log', 'lab_freq_log']
+
+transform_steps = [('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(targets, cat_cols, numeric_cols, log_numeric_cols)),
+         ('StandardizeStandardScaler', Standardize(cols, scalar))]
+transform_pipeline = Pipeline(transform_steps)
+
+data_prepared = transform_pipeline.fit(X_train_ad1)
+

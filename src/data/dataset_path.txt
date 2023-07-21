@@ -40,3 +40,7 @@
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
+
+/home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
+
+
