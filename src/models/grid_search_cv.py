@@ -78,19 +78,18 @@ def LogisticRegression_Grid_CV(X_train,y_train, LogisticRegression_param):
     estimator = LogisticRegression()
     gsearch = GridSearchCV(estimator , param_grid = LogisticRegression_param, scoring='roc_auc', cv=5)
     gsearch.fit(X_train, y_train)
-    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
     print_best_score(gsearch,LogisticRegression_param)
 
 def LinearDiscriminant_Grid_CV(X_train,y_train, LinearDiscriminant_param):
     estimator = LinearDiscriminantAnalysis()
     gsearch = GridSearchCV(estimator , param_grid = LinearDiscriminant_param, scoring='roc_auc', cv=5)
     gsearch.fit(X_train, y_train)
-    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
     print_best_score(gsearch,LinearDiscriminant_param)
 
 def DecisionTree_Grid_CV(X_train,y_train, DecisionTree_param):
     estimator = DecisionTreeClassifier()
     gsearch = GridSearchCV(estimator , param_grid = DecisionTree_param, scoring='roc_auc', cv=5)
     gsearch.fit(X_train, y_train)
-    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
     print_best_score(gsearch,DecisionTree_param)
+
+
