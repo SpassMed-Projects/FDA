@@ -109,3 +109,7 @@ transform_pipeline = Pipeline(transform_steps)
 
 data_prepared = transform_pipeline.fit(X_train_ad1)
 
+
+
+
+

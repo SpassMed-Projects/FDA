@@ -135,3 +135,16 @@ class Standardize(BaseEstimator, TransformerMixin):
   def transform(self, X):
     return self.rob_scale_numeric_data(X,self.cols)
 
+class ImputeNumeric(BaseEstimator, TransformerMixin):
+  def __init__(self):
+     pass
+  
+  def fit(self, X,  y=None):
+    return self
+  
+  def transform(self, X):
+    missing_cols = X.columns[X.isna().any()].tolist()
+    for colname in missing_cols:
+      X[colname].fillna((X[colname].mean()), inplace = True)
+    return X
+  
