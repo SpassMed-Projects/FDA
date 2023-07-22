@@ -69,9 +69,18 @@ LinearDiscriminan_param = {
     'solver': ['svd', 'lsqr', 'eigen']
 }
 
-LinearDiscriminant_param = {
+DecisionTree_param = {
     'criterion': ['gini', 'entropy'],
-    'max_depth': [2,4,6,8,10,12]
+    'max_depth': [2,4,6,8,10,12],
+    'min_samples_split': [5,10,20], # prevent overfitting
+    'min_samples_leaf': list(range(2,7,1)) #also used for prevent overfitting
+}
+
+RandomForest_param = {
+    'criterion': ['gini', 'entropy'],
+    'max_depth': [2,4,6,8,10,12],
+    'min_samples_split': [5,10,20], # prevent overfitting
+    'min_samples_leaf': list(range(2,7,1)) #also used for prevent overfitting
 }
 
 def LogisticRegression_Grid_CV(X_train,y_train, LogisticRegression_param):
@@ -91,5 +100,11 @@ def DecisionTree_Grid_CV(X_train,y_train, DecisionTree_param):
     gsearch = GridSearchCV(estimator , param_grid = DecisionTree_param, scoring='roc_auc', cv=5)
     gsearch.fit(X_train, y_train)
     print_best_score(gsearch,DecisionTree_param)
+
+def RandomForest_Grid_CV(X_train,y_train, DecisionTree_param):
+    estimator = RandomForestClassifier()
+    gsearch = GridSearchCV(estimator , param_grid = RandomForest_param, scoring='roc_auc', cv=5)
+    gsearch.fit(X_train, y_train)
+    print_best_score(gsearch, RandomForest_param)
 
 
