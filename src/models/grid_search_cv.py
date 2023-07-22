@@ -7,6 +7,9 @@ from lightgbm.sklearn import LGBMRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.datasets import dump_svmlight_file
 from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
  
 from sklearn import metrics   #Additional scklearn functions
 from sklearn.model_selection import GridSearchCV
@@ -47,3 +50,47 @@ Y_admission1 = df1[['Readmission']]
 X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
 
 LogisticRegression_Grid_CV(X_train_ad1, y_train_ad1, LogisticRegression_param)
+
+
+def print_best_score(gsearch,param_test):
+    print("Best score: %0.3f" % gsearch.best_score_)
+    print("Best parameters set:")
+    best_parameters = gsearch.best_estimator_.get_params()
+    for param_name in sorted(param_test.keys()):
+        print("\t%s: %r" % (param_name, best_parameters[param_name]))
+ 
+LogisticRegression_param = { 
+    'penalty' : ['l1','l2'], 
+    'C'       : np.logspace(-1,3,5),
+    'solver'  : ['liblinear','saga']
+    }
+
+LinearDiscriminan_param = {
+    'solver': ['svd', 'lsqr', 'eigen']
+}
+
+LinearDiscriminant_param = {
+    'criterion': ['gini', 'entropy'],
+    'max_depth': [2,4,6,8,10,12]
+}
+
+def LogisticRegression_Grid_CV(X_train,y_train, LogisticRegression_param):
+    estimator = LogisticRegression()
+    gsearch = GridSearchCV(estimator , param_grid = LogisticRegression_param, scoring='roc_auc', cv=5)
+    gsearch.fit(X_train, y_train)
+    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
+    print_best_score(gsearch,LogisticRegression_param)
+
+def LinearDiscriminant_Grid_CV(X_train,y_train, LinearDiscriminant_param):
+    estimator = LinearDiscriminantAnalysis()
+    gsearch = GridSearchCV(estimator , param_grid = LinearDiscriminant_param, scoring='roc_auc', cv=5)
+    gsearch.fit(X_train, y_train)
+    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
+    print_best_score(gsearch,LinearDiscriminant_param)
+
+def DecisionTree_Grid_CV(X_train,y_train, DecisionTree_param):
+    estimator = DecisionTreeClassifier()
+    gsearch = GridSearchCV(estimator , param_grid = DecisionTree_param, scoring='roc_auc', cv=5)
+    gsearch.fit(X_train, y_train)
+    gsearch.grid_scores_, gsearch.best_params_, gsearch.best_score_
+    print_best_score(gsearch,DecisionTree_param)
