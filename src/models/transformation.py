@@ -40,15 +40,16 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
-  def __init__(self, targets, cat_cols, numeric_cols, log_numeric_cols):  
-    self.targets = targets
-    self.cat_cols = cat_cols
-    self.numeric_cols = numeric_cols
-    self.log_numeric_cols = log_numeric_cols
-  
+  def __init__(self):  
+    self.targets = ['readmission within 300 days', 'died_within_900days']
+    self.cat_cols = ['AO', 'CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
+            'Ethnicity_2', 'Races_0', 'Races_1', 'Races_2', 'Races_3', 
+            'Ruca category encoded']
+
   def check_skewness(self, X):
+    numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols) - {'Internalpatientid'})
     statusdf = pd.DataFrame()
-    statusdf['numeric_col'] = self.numeric_cols
+    statusdf['numeric_col'] = numeric_cols
     transform = []
     sknewness_before = []
     kurtosis_before = []
@@ -59,7 +60,7 @@ class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
     std_after = []
 
     method = []
-    for i in self.numeric_cols:
+    for i in numeric_cols:
         if abs(X[i].skew()) > 1.96 and abs(X[i].kurtosis()) > 1.96:
             transform.append('Yes')
             sknewness_before.append(X[i].skew())
@@ -93,24 +94,22 @@ class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
     statusdf['std_before'] = std_before
     statusdf['std_after'] = std_after
     return statusdf
-  
-  def remove_skewness(self, X):
+
+  def extract_log_col(self, X):
     statusdf = self.check_skewness(X)
     for i in range(len(statusdf)):
-        if statusdf['transform'][i] == 'Yes':
-            colname = str(statusdf['numeric_col'][i])
+       if statusdf['transform'][i] == 'Yes':
+        colname = str(statusdf['numeric_col'][i])
             
             # will lose information here,
             # For np.log() has 'inf', and we will not consider 'inf'
             #df[colname + "_log"] = np.log1p(df[df[colname] >= 0][colname])
-            X[colname + "_log"] = np.log1p(X[colname])
+        X[colname+'_log'] = np.log1p(X[colname])
+    log_numeric_cols = [x for x in X.columns if '_log' in x]  
+    cols_no_transform = list(statusdf[statusdf['transform'] == 'No']['numeric_col'])
+    log_cols = ['Internalpatientid'] + log_numeric_cols + self.cat_cols + cols_no_transform 
+    X = X[log_cols]
     return X
-
-  def extract_log_col(self, X):
-    df_log = self.remove_skewness(X)
-    log_cols = ['Internalpatientid'] + self.log_numeric_cols + self.cat_cols
-    df_log = df_log[log_cols]
-    return df_log
 
   def fit(self, X,  y=None):
     return self
@@ -119,12 +118,12 @@ class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
     return self.extract_log_col(X)
   
 class Standardize(BaseEstimator, TransformerMixin):
-  def __init__(self, cols, scalar):
-    self.cols = cols
+  def __init__(self, scalar):
     self.scalar = scalar
 
-  def rob_scale_numeric_data(self, X, cols):
-    for i in cols:
+  def rob_scale_numeric_data(self, X):
+    log_numeric_cols = [x for x in X.columns if '_log' in x]
+    for i in log_numeric_cols:
         X[i] = self.scalar.fit_transform(X[i].values.reshape(-1,1))
         X = X.rename(columns = {i:i+ "_rob_scaled"})
     return X
@@ -133,7 +132,7 @@ class Standardize(BaseEstimator, TransformerMixin):
     return self
   
   def transform(self, X):
-    return self.rob_scale_numeric_data(X,self.cols)
+    return self.rob_scale_numeric_data(X)
 
 class ImputeNumeric(BaseEstimator, TransformerMixin):
   def __init__(self):
