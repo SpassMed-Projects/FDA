@@ -35,6 +35,14 @@
 
 /home/daisy/FDA_Dataset/inpatient_all_final_2.csv: inpatient inner join other tables with 1656 missing values
 
+/home/daisy/FDA_Dataset/inpatient_medications_ordered_test_clean.csv: inpatient medication ordered test set clean
+
+/home/daisy/FDA_Dataset/procedures_test_clean.csv: inpatient procedures test set clean
+
+/home/daisy/FDA_Dataset/immunization_test_clean.csv: immunization test set clean
+
+/home/daisy/FDA_Dataset/demographics_static_test_clean.csv: demographic static test set clean
+
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
@@ -42,6 +50,14 @@
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
 
 /home/vivi/FDA_datasets/inpatient_measurements_bp_preprocessed.csv: updated inpatient measurements bp preprocessed
+
+/home/vivi/FDA_datasets/inpatient_measurements_bp_test.csv: inpatient measurements blood pressure test set
+
+home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
+
+/home/vivi/FDA_datasets/demographics_event_test.csv: demographics event for test set
+
+/home/vivi/FDA_datasets/inpatient_specialty_preprocessed_test.csv: inpatient_specialty for test set
 
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
