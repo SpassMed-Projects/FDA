@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import f1_score
 
 import numpy as np
 np.random.seed(401)
@@ -44,6 +46,22 @@ def get_SensitSpecific(y_test, y_score):
     #As it was mentioned in the other answers, specificity is the recall of the negative class
     specificity = recall_score(y_test, y_score, pos_label=0) # TN / (TN + FP) 
     print(sensitivity + specificity)
+
+def get_Sensitivity(y_test, y_score):
+    sensitivity = recall_score(y_test, y_score,average = 'binary') #TP / (TP + FN)
+    print(sensitivity)
+
+def get_Specificity(y_test, y_score):
+    specificity = recall_score(y_test, y_score, average = 'binary', pos_label=0) # TN / (TN + FP) 
+    print(specificity)
+
+def get_Precision(y_test, y_score):
+    precision = precision_score(y_test, y_score, average='binary')
+    print(precision)
+
+def get_F1score(y_test, y_score):
+    score = f1_score(y_test, y_score, average='binary')
+    print(score)
 
 
 ## 不知道有没有用：
