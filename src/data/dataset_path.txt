@@ -35,9 +35,17 @@
 
 /home/daisy/FDA_Dataset/inpatient_all_final_2.csv: inpatient inner join other tables with 1656 missing values
 
-/home/daisy/FDA_Dataset/inpatient_CVD_final_1.csv: inpatient left join other tables for CVD patients only
+/home/daisy/FDA_Dataset/inpatient_CVD_final_1.csv: inpatient left join other tables for CVD admission and mortality
 
-/home/daisy/FDA_Dataset/inpatient_CVD_final_2.csv: inpatient inner join other tables for CVD patients only
+/home/daisy/FDA_Dataset/inpatient_CVD_final_2.csv: inpatient inner join other tables for CVD admission and mortality
+
+/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv: inpatient left join other tables (test set)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv: inpatient inner join other tables for CVD admission and mortality (test set)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_test_2.csv: inpatient inner join other tables (test set)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_test_2.csv: inpatient inpatient inner join other tables for CVD admission and mortality (test set)
 
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
 
