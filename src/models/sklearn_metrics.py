@@ -33,8 +33,6 @@ def get_AUROC(y_test, y_score):
     auc_roc_score = roc_auc_score(y_test, y_score)
     print(auc_roc_score)
 
-
-
 def get_Accurarcy(y_test, y_score):
     accuracy = accuracy_score(y_test, y_score)
     print(accuracy)
