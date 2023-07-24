@@ -35,14 +35,6 @@
 
 /home/daisy/FDA_Dataset/inpatient_all_final_2.csv: inpatient inner join other tables with 1656 missing values
 
-/home/daisy/FDA_Dataset/inpatient_medications_ordered_test_clean.csv: inpatient medication ordered test set clean
-
-/home/daisy/FDA_Dataset/procedures_test_clean.csv: inpatient procedures test set clean
-
-/home/daisy/FDA_Dataset/immunization_test_clean.csv: immunization test set clean
-
-/home/daisy/FDA_Dataset/demographics_static_test_clean.csv: demographic static test set clean
-
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
@@ -66,3 +58,5 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/hassan/lily/MLA/FDA/ed_visits_full.csv: final ed_visits clean dataset (with death)
 
 /home/hassan/lily/MLA/FDA/ed_visits_test.csv: testset (final ed_visits clean dataset (with death))
+
+/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: final inpatient clean dataset (target columns: CVD_readmission, readmission_within_30days)

@@ -13,6 +13,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, precision_recall_curve
 from sklearn.metrics import auc, plot_precision_recall_curve
 import matplotlib.pyplot as plt
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import recall_score
 
 import numpy as np
 np.random.seed(401)
@@ -26,16 +29,23 @@ def get_AUPRC(y_test, y_score):
     print(auc_precision_recall)
     
 
-def get_AUROC():
-    pass
+def get_AUROC(y_test, y_score):
+    auc_roc_score = roc_auc_score(y_test, y_score)
+    print(auc_roc_score)
 
 
-def get_Accurarcy():
-    pass
+
+def get_Accurarcy(y_test, y_score):
+    accuracy = accuracy_score(y_test, y_score)
+    print(accuracy)
 
 
-def get_SensitSpecific():
-    pass
+def get_SensitSpecific(y_test, y_score):
+    sensitivity = recall_score(y_test, y_score,average = 'binary') #TP / (TP + FN)
+
+    #As it was mentioned in the other answers, specificity is the recall of the negative class
+    specificity = recall_score(y_test, y_score, pos_label=0) # TN / (TN + FP) 
+    print(sensitivity + specificity)
 
 
 ## 不知道有没有用：
