@@ -10,6 +10,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler, RobustScaler
 import scipy as sp
+from sklearn.utils.validation import column_or_1d
 import copy,os,sys,psutil
 import pickle
 import lightgbm as lgb
@@ -47,35 +48,38 @@ from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
 
 
-
+dictPath = {
+    'readmission': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 
+    'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv'
+}
 
 def prepare_dataset(target):
     # Import Data
-    path = '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv'
+    path =  dictPath[target]
     data = pd.read_csv(path).iloc[:,1:]
-    
-    if target == "readmission" :
-        X = data.drop(columns = ['readmission within 300 days', 'died_within_900days'])
-        y = data[['readmission within 300 days']]
+   
+    if target == "readmission":
+        X = data.drop(columns = ['CVD_readmission', 'readmission within 300 days'])
+        y = column_or_1d(data[['readmission within 300 days']])
     else:
-        X = data.drop(columns = ['died_within_900days'])
-        y = data[['died_within_900days']]
+        X = data.drop(columns = ['CVD_readmission', 'readmission within 300 days'])
+        y = column_or_1d(data[['died_within_900days']])
 
-        # # Split Train and Test (?? 似乎不用)
-        # X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
-        # Transform Data
-        transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                   ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
-                   ('StandardizeStandardScaler', Standardize(RobustScaler()))]
-        transform_pipeline = Pipeline(transform_steps)
+    # # Split Train and Test (?? 似乎不用)
+    # X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
+    # Transform Data
+    transform_steps = [("ImputeNumeric", ImputeNumeric()),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
+                ('StandardizeStandardScaler', Standardize(RobustScaler()))]
+    transform_pipeline = Pipeline(transform_steps)
 
-        X = transform_pipeline.transform(X)
+    X = transform_pipeline.transform(X)
 
-        # Balance the dataset
-        sme = SMOTEENN(random_state=42)
-        X, y = sme.fit_resample(X, y)
-        
-        return X,y
+    # Balance the dataset
+    sme = SMOTEENN(random_state=42)
+    X, y = sme.fit_resample(X, y)
+    
+    return X,y
 
 def train_model(X,y,model_type):
     if model_type=='LogisticRegression':
@@ -116,7 +120,7 @@ if __name__ == '__main__':
     # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
     parser.add_argument("--model_type", help="select model architecture", type=str)
     parser.add_argument("--target", help="select target", type=str)
-
+    
     args = parser.parse_args()
 
     print(f"Selected model type is: {args.model_type}")
@@ -126,7 +130,7 @@ if __name__ == '__main__':
 
     clf = train_model(X,y,args.model_type)
 
-    filename = f"{args.model_type}_{args.target}.sav"
+    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
     pickle.dump(clf, open(filename, 'wb'))
 
     
