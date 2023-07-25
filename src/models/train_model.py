@@ -48,14 +48,14 @@ from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
 
 
-dictPath = {
+dict_data = {
     'readmission': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 
     'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv'
 }
 
 def prepare_dataset(target):
     # Import Data
-    path =  dictPath[target]
+    path =  dict_data[target]
     data = pd.read_csv(path).iloc[:,1:]
    
     if target == "readmission":
@@ -84,26 +84,32 @@ def prepare_dataset(target):
 def train_model(X,y,model_type):
     if model_type=='LogisticRegression':
         gsearch = LogisticRegression_Grid_CV(X,y,LogisticRegression_param)
+        print(gsearch.best_score_)
         return LogisticRegression(**gsearch.best_params_)
 
     elif model_type=='LinearDiscriminant':
         gsearch = LinearDiscriminant_Grid_CV(X,y,LinearDiscriminan_param)
+        print(gsearch.best_score_)
         return LinearDiscriminantAnalysis(**gsearch.best_params_)
 
     elif model_type=='DecisionTree':
         gsearch = DecisionTree_Grid_CV(X,y,DecisionTree_param)
+        print(gsearch.best_score_)
         return DecisionTreeClassifier(**gsearch.best_params_)
 
     elif model_type=='RandomForest':
         gsearch = RandomForest_Grid_CV(X,y,RandomForest_param)
+        print(gsearch.best_score_)
         return RandomForest_Grid_CV(**gsearch.best_params_)
 
     elif model_type=='XGBoost':
         gsearch = XGBoost_Grid_CV(X,y,XGBoost_param)
+        print(gsearch.best_score_)
         return xgb.XGBClassifier(**gsearch.best_params_)
 
     elif model_type=='AdaBoost':
         gsearch = AdaBoost_Grid_CV(X,y,AdaBoost_param)
+        print(gsearch.best_score_)
         return AdaBoostClassifier(**gsearch.best_params_, 
                                   base_estimator=DecisionTreeClassifier())
 

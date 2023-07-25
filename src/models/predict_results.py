@@ -45,15 +45,23 @@ from sklearn import metrics   #Additional scklearn functions
 import xgboost as xgb
 from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
+from FDA.src.models.statistics_metrics import *
 
 dict_model = {
     "modelname": "path"
 
 }
 
+dict_target_info = {
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'modelname'],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'model_name']
+}
     
-def prepare_dataset(data):
+def prepare_dataset(target):
     # Import Data
+    path =  dict_target_info[target[0]]
+    data = pd.read_csv(path).iloc[:,1:]
+
     if target == "readmission":
         X = data.drop(columns = ['readmission within 300 days', 'died_within_900days'])
         y = data[['readmission within 300 days']]
@@ -61,46 +69,81 @@ def prepare_dataset(data):
         X = data.drop(columns = ['died_within_900days'])
         y = data[['died_within_900days']]
 
-        # # Split Train and Test (?? 似乎不用)
-        # X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
-        # Transform Data
-        transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                   ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
-                   ('StandardizeStandardScaler', Standardize(RobustScaler()))]
-        transform_pipeline = Pipeline(transform_steps)
+    # # Split Train and Test (?? 似乎不用)
+    # X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
+    # Transform Data
+    transform_steps = [("ImputeNumeric", ImputeNumeric()),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
+                ('StandardizeStandardScaler', Standardize(RobustScaler()))]
+    transform_pipeline = Pipeline(transform_steps)
 
-        X = transform_pipeline.transform(X)
+    X = transform_pipeline.transform(X)
 
-        # Balance the dataset
-        sme = SMOTEENN(random_state=42)
-        X, y = sme.fit_resample(X, y)
-        
-        return X,y
+    # Balance the dataset
+    sme = SMOTEENN(random_state=42)
+    X, y = sme.fit_resample(X, y)
+    
+    return X,y
 
-def make_prediction(dataset_name,model_name):
-    if dataset_name == "quality":
+def make_prediction(X,y,model_name):
+    clf = pickle.load(open(dict_model[model_name]), 'rb')
+    predict_label = clf.predict(X)
+    predict_contin = [pair[1] for pair in clf.predict_proba(X)]
+    return predict_label, predict_contin, y
+
+def calculate_score(y, predict_label):
+    scores = [
+        get_AUPRC(y, predict_label),
+        get_AUROC(y, predict_label),
+        get_Accurarcy(y, predict_label),
+        get_SensitSpecific(y, predict_label),
+        get_Sensitivity(y, predict_label),
+        get_Specificity(y, predict_label),
+        get_Precision(y, predict_label),
+        get_NPC(y, predict_label),
+        get_PositiveLR(y, predict_label),
+        get_NegativeLR(y, predict_label),
+        get_F1score(y, predict_label)
+    ]
+    return scores
+
+def statistics_metrics_df(model_name):
+    for target in dict_target_info:
+         X,y = prepare_dataset(target)
+         predict_label, predict_contin, y = make_prediction(X,y,model_name)
+         scores = calculate_score(y, predict_label)
+
+
+if dataset_name == "quality":
         path = 'quality_dataset_path'
         data = pd.read_csv(path).iloc[:,1:]
         X,y = prepare_dataset(data)
     else:
         path = 'test_dataset_path'
         data = pd.read_csv(path).iloc[:,1:]
-        X,y = prepare_dataset(data)
-    clf = pickle.load(open(dict_model[model_name]), 'rb')
-    predict_label = clf.predict(X)
-    predict_contin = [pair[1] for pair in clf.predict_proba(X)]
-    return predict_label,predict_contin
-
-def cal
-
-
-
         
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--isdev", help="run to test pipeline: 1 - True, 0 - False", type=int)
+
+    # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
+    parser.add_argument("--model_type", help="select model architecture", type=str)
+    parser.add_argument("--target", help="select target", type=str)
+    
+    args = parser.parse_args()
+
+    print(f"Selected model type is: {args.model_type}")
+    print(f"Target: {args.target}")
+
+    X, y = prepare_dataset(args.target)
+    predict_label, predict_contin, y = make_prediction(X,y,)
+    calculate_score(y, predict_label):
+
+    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
+    pickle.dump(clf, open(filename, 'wb'))
+
+    
+    
 
 
-        # # load the model from disk
-        # loaded_model = pickle.load(open(filename, 'rb'))
-        # result = loaded_model.score(X_test, Y_test)
-        # print(result)
 
-    elif 
