@@ -42,12 +42,12 @@ from sklearn.model_selection import train_test_split
 class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
   def __init__(self):  
     self.targets = ['readmission within 300 days', 'died_within_900days']
-    self.cat_cols = ['AO', 'CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
+    self.cat_cols = ['CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
             'Ethnicity_2', 'Races_0', 'Races_1', 'Races_2', 'Races_3', 
             'Ruca category encoded']
 
   def check_skewness(self, X):
-    numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols) - {'Internalpatientid'})
+    numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols))
     statusdf = pd.DataFrame()
     statusdf['numeric_col'] = numeric_cols
     transform = []
@@ -107,7 +107,7 @@ class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
         X[colname+'_log'] = np.log1p(X[colname])
     log_numeric_cols = [x for x in X.columns if '_log' in x]  
     cols_no_transform = list(statusdf[statusdf['transform'] == 'No']['numeric_col'])
-    log_cols = ['Internalpatientid'] + log_numeric_cols + self.cat_cols + cols_no_transform 
+    log_cols = log_numeric_cols + self.cat_cols + cols_no_transform 
     X = X[log_cols]
     return X
 

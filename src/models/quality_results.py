@@ -68,17 +68,17 @@ def prepare_dataset(target):
     patientId = pd.DataFrame(data['Internalpatientid'])
    
     if target == "readmission":
-        X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
+        X = data.drop(columns = ['Internalpatientid'])
         y = column_or_1d(data[['readmission within 300 days']])
     elif target == "readmission_cvd":
-        X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
-        y = column_or_1d(data[['CVD_readmission']])
+        X = data.drop(columns = ['Internalpatientid'])
+        
     elif target == "mortality":
-        X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
-        y = column_or_1d(data[['died_within_125days']])
+        X = data.drop(columns = ['Internalpatientid'])
+        
     else:
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
-        y = column_or_1d(data[['died_by_cvd']])
+       
     
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),

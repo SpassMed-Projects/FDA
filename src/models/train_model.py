@@ -9,9 +9,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler, RobustScaler
-import scipy as sp
 from sklearn.utils.validation import column_or_1d
-import copy,os,sys,psutil
 import pickle
 import lightgbm as lgb
 from lightgbm.sklearn import LGBMRegressor
@@ -28,7 +26,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_sco
 from collections import Counter
 from sklearn.decomposition import PCA, TruncatedSVD
 import matplotlib.patches as mpatches
-import time
 from sklearn.metrics import mean_squared_error,r2_score
 from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
 from transformation import *    
@@ -40,9 +37,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
- 
 from sklearn import metrics   #Additional scklearn functions
-
 import xgboost as xgb
 from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
@@ -51,8 +46,8 @@ from lightgbm import LGBMClassifier
 dict_data = {
     'readmission': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 
     'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv',
-    # "mortality": ,
-    "mortality_cvd": '/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv'
+    "mortality": '/home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv',
+    "mortality_cvd": '/home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv'
 }
 
 def prepare_dataset(target):
@@ -67,8 +62,8 @@ def prepare_dataset(target):
         X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
         y = column_or_1d(data[['CVD_readmission']])
     elif target == "mortality":
-        X = data.drop(columns = ['Internalpatientid', 'died within 125 days'])
-        y = column_or_1d(data[['died within 125 days']])
+        X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
+        y = column_or_1d(data[['died_within_125days']])
     else:
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
@@ -131,8 +126,6 @@ def train_model(X,y,model_type):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--isdev", help="run to test pipeline: 1 - True, 0 - False", type=int)
-
     # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
     parser.add_argument("--model_type", help="select model architecture", type=str)
     parser.add_argument("--target", help="select target", type=str)
