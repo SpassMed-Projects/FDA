@@ -51,6 +51,18 @@
 
 /home/daisy/FDA_Dataset/inpatient_medications_ordered_quality_admission.csv: medication ordered quality data set (quality set for readmission)
 
+/home/daisy/FDA_Dataset/immunization_quality_admission.csv: immunization quality data set for admission (quality)
+
+/home/daisy/FDA_Dataset/demographics_static_quality_admission.csv: demographic static quality data set for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv: inpatient quality data set left join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_1.csv: CVD inpatient quality data set left join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_2.csv:  inpatient quality data set inner join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_2.csv: CVD inpatient quality data set inner join other data for admission (quality)
+
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
@@ -66,6 +78,14 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/vivi/FDA_datasets/inpatient_specialty_preprocessed_test.csv: inpatient_specialty for test set
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed_test.csv: outpatient visits for test set
+
+/home/vivi/FDA_datasets/inpatient_measurements_bp_quality_admission.csv: inpatient measurements bp quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/inpatient_specialty_quality_admission.csv: inpatient specialty quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/outpatient_state_quality_admission.csv: outpatient state quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/demographics_event_quality_admission.csv: demographic event quality data set for admission (quality)
 
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
@@ -89,7 +109,3 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
 
 /home/daisy/FDA_Dataset/final_allcause_mortality_train_2.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
-
-/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv: final test dataset (left join) for cvd mortality (target column: died by cvd)
-
-/home/daisy/FDA_Dataset/final_cvd_mortality_test_2.csv: final test dataset (inner join) for cvd mortality (target column: died by cvd)
