@@ -47,8 +47,6 @@
 
 /home/daisy/FDA_Dataset/inpatient_CVD_final_test_2.csv: inpatient inpatient inner join other tables for CVD admission and mortality (test set)
 
-/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
-
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
@@ -73,8 +71,9 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 /home/hassan/lily/MLA/FDA/ed_visits_test.csv: testset (final ed_visits clean dataset (with death))
 
-/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: final inpatient clean dataset (target columns: CVD_readmission, readmission_within_30days)
+/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: final inpatient clean dataset (target columns: CVD_readmission, readmission_within_300days)
 
-/home/hassan/lily/MLA/FDA/outpatient_mortality.csv: outpatient dataset for all-cause mortality (target column: died within 125 days)
+/home/hassan/lily/MLA/FDA/outpatient_mortality.csv: outpatient dataset for all-cause mortality (target column: died within 125 days) (NOTE: DROP 'last_visit_date', 'Died',
+       'away_from_death' when training)
 
-/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd)
+/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd) (all other columns can be treated as features)
