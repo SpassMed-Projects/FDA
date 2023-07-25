@@ -83,9 +83,17 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 /home/vivi/FDA_datasets/inpatient_specialty_quality_admission.csv: inpatient specialty quality data set for admission (quality)
 
-/home/vivi/FDA_datasets/outpatient_state_quality_admission.csv: outpatient state quality data set for admission (quality)
+/home/vivi/FDA_datasets/outpatient_state_quality_admission.csv: outpatient state quality data set (quality)
 
 /home/vivi/FDA_datasets/demographics_event_quality_admission.csv: demographic event quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/inpatient_measurements_bp_cvd_mortality_quality.csv: measurement bp quality data set for cvd mortality(quality)
+
+/home/vivi/FDA_datasets/inpatient_measurements_bp_allcause_mortality_quality.csv: measurement bp quality data set for all cause mortality(quality)
+
+/home/vivi/FDA_datasets/inpatient_specialty_preprocessed_quality.csv: measurement bp quality data set for all cause mortality(quality)
+
+/home/vivi/FDA_datasets/inpatient_specialty_cvd_mortality_quality.csv: inpatient specialty quality data set for cvd cause mortality(quality)
 
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
@@ -100,7 +108,11 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/hassan/lily/MLA/FDA/outpatient_mortality.csv: outpatient dataset for all-cause mortality (target column: died within 125 days) (NOTE: DROP 'last_visit_date', 'Died',
        'away_from_death' when training)
 
+/home/hassan/lily/MLA/FDA/outpatient_mortality_quality.csv: outpatient quality dataset for all-cause mortality (quality)
+
 /home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd) (all other columns can be treated as features)
+
+/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality_quality.csv: inpatient quality dataset for cvd mortality
 
 /home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv: final train dataset (left join) for cvd mortality (target column: died by cvd)
 
@@ -109,3 +121,11 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
 
 /home/daisy/FDA_Dataset/final_allcause_mortality_train_2.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
+
+/home/daisy/FDA_Dataset/inpatient_procedures_clean_allcause_mortality_quality.csv: procedures quality data for all cause mortality (quality)
+
+/home/daisy/FDA_Dataset/inpatient_procedures_clean_cvd_mortality_qaulity.csv: procedures quality data for cvd cause mortality (quality)
+
+/home/daisy/FDA_Dataset/inpatient_medications_ordered_cvd_mortality_quality.csv:medication ordered quality data for cvd cause mortality (quality)
+
+/home/daisy/FDA_Dataset/inpatient_medications_ordered_allcause_mortality_quality.csv: medication ordered quality data for all cause mortality (quality)
