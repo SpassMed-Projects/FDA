@@ -57,9 +57,7 @@ dict_target_info = {
     'mortality_cvd':[],
     'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'modelname'],
     'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'model_name']
-  
 }
-
 
 def prepare_dataset(target):
     # Import Data
@@ -88,7 +86,7 @@ def prepare_dataset(target):
 
     X = transform_pipeline.transform(X)
     
-    return X,y,patientId
+    return X,patientId
 
 def make_prediction(X,target):
     clf = pickle.load(open(dict_target_info[target][1]), 'rb')
@@ -96,45 +94,16 @@ def make_prediction(X,target):
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
     return predict_label, predict_contin
 
-def calculate_score(y, predict_label):
-    scores = [
-        get_AUPRC(y, predict_label),
-        get_AUROC(y, predict_label),
-        get_Accurarcy(y, predict_label),
-        get_SensitSpecific(y, predict_label),
-        get_Sensitivity(y, predict_label),
-        get_Specificity(y, predict_label),
-        get_Precision(y, predict_label),
-        get_NPC(y, predict_label),
-        get_PositiveLR(y, predict_label),
-        get_NegativeLR(y, predict_label),
-        get_F1score(y, predict_label)
-    ]
-    return scores
-
 def make_df():
-    statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
-                                       'Area under the Receiver Operating Characteristic (AUROC)',
-                                       'Overall Accuracy',
-                                       'Sum of Sensitivity and Specificity',
-                                       'Sensitivity',
-                                       'Specificity',
-                                       'Precision',
-                                       'Negative Predictive Value',
-                                       'Positive Likelihood Ratio',
-                                       'Negative Likelihood Ratio',
-                                       'F1 score'], columns=['statistics_metrics'])
     X,y,patientId= prepare_dataset(target)
     pred_result = patientId
     for target in dict_target_info:
         predict_label, predict_contin = make_prediction(X,y,target)
-        scores = calculate_score(y, predict_label)
         pred_result[target + "_label"] = predict_label
         pred_result[target + "_contin"] = predict_contin
-        statistics_metrics[target] = scores
+  
     pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result.csv')
-    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics.csv')
-
+    
 if __name__ == '__main__':
     make_df()
 

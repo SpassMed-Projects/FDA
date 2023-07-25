@@ -1,7 +1,7 @@
 from sklearn.metrics import average_precision_score, precision_recall_curve
 from sklearn.metrics import auc
 from sklearn.metrics import roc_auc_score
-from sklearn.metrics import accuracy_pred
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import f1_score
@@ -23,7 +23,7 @@ def get_AUROC(y_test, y_pred):
     return auc_roc_score
 
 def get_Accurarcy(y_test, y_pred):
-    accuracy = accuracy_pred(y_test, y_pred)
+    accuracy = accuracy_score(y_test, y_pred)
     return accuracy
 
 def get_SensitSpecific(y_test, y_pred):

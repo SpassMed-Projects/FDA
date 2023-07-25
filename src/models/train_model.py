@@ -89,38 +89,38 @@ def train_model(X,y,model_type):
     if model_type=='LogisticRegression':
         gsearch = LogisticRegression_Grid_CV(X,y,LogisticRegression_param)
         print(gsearch.best_score_)
-        return LogisticRegression(**gsearch.best_params_)
+        return LogisticRegression(**gsearch.best_params_).fit(X,y)
 
     elif model_type=='LinearDiscriminant':
         gsearch = LinearDiscriminant_Grid_CV(X,y,LinearDiscriminant_param)
         print(gsearch.best_score_)
-        return LinearDiscriminantAnalysis(**gsearch.best_params_)
+        return LinearDiscriminantAnalysis(**gsearch.best_params_).fit(X,y)
 
     elif model_type=='DecisionTree':
         gsearch = DecisionTree_Grid_CV(X,y,DecisionTree_param)
         print(gsearch.best_score_)
-        return DecisionTreeClassifier(**gsearch.best_params_)
+        return DecisionTreeClassifier(**gsearch.best_params_).fit(X,y)
 
     elif model_type=='RandomForest':
         gsearch = RandomForest_Grid_CV(X,y,RandomForest_param)
         print(gsearch.best_score_)
-        return RandomForest_Grid_CV(**gsearch.best_params_)
+        return RandomForestClassifier(**gsearch.best_params_).fit(X,y)
 
     elif model_type=='XGBoost':
         gsearch = XGBoost_Grid_CV(X,y,XGBoost_param)
         print(gsearch.best_score_)
-        return xgb.XGBClassifier(**gsearch.best_params_)
+        return xgb.XGBClassifier(**gsearch.best_params_).fit(X,y)
 
     elif model_type=='AdaBoost':
         gsearch = AdaBoost_Grid_CV(X,y,AdaBoost_param)
         print(gsearch.best_score_)
         return AdaBoostClassifier(**gsearch.best_params_, 
-                                  base_estimator=DecisionTreeClassifier())
+                                  base_estimator=DecisionTreeClassifier()).fit(X,y)
 
     elif model_type=='LGBM':
         gsearch = LGBM_Grid_CV(X,y,LGBM_param)
         print(gsearch.best_score_)
-        return LGBMClassifier(**gsearch.best_params_)
+        return LGBMClassifier(**gsearch.best_params_).fit(X,y)
 
     else: raise NotImplementedError
 

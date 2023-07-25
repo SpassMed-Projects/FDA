@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.preprocessing import StandardScaler, RobustScaler
 import scipy as sp
 import copy,os,sys,psutil
@@ -23,12 +21,11 @@ from imblearn.combine import SMOTEENN
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import NearMiss
 from imblearn.metrics import classification_report_imbalanced
-from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, accuracy_score, classification_report
+
 from collections import Counter
 from sklearn.decomposition import PCA, TruncatedSVD
 import matplotlib.patches as mpatches
 import time
-from sklearn.metrics import mean_squared_error,r2_score
 from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
 from transformation import *    
 from grid_search_cv import *
@@ -45,18 +42,16 @@ from sklearn import metrics   #Additional scklearn functions
 import xgboost as xgb
 from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
-from FDA.src.models.statistics_metrics import *
+from statistics_metrics import *
 from sklearn.utils.validation import column_or_1d
 
-dict_model = {
-    "modelname": "path"
-}
+
 
 dict_target_info = {
-    'mortality': [],
-    'mortality_cvd':[],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'modelname'],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'model_name']
+    # 'mortality': [],
+    # 'mortality_cvd':[],
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
+    # 'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', 'model_name']
   
 }
 
@@ -91,7 +86,7 @@ def prepare_dataset(target):
     return X,y,patientId
 
 def make_prediction(X,target):
-    clf = pickle.load(open(dict_target_info[target][1]), 'rb')
+    clf = pickle.load(open(dict_target_info[target][1],'rb'))
     predict_label = clf.predict(X)
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
     return predict_label, predict_contin
@@ -124,10 +119,11 @@ def make_df():
                                        'Positive Likelihood Ratio',
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
-    X,y,patientId= prepare_dataset(target)
+    X, y, patientId= prepare_dataset('readmission')
     pred_result = patientId
     for target in dict_target_info:
-        predict_label, predict_contin = make_prediction(X,y,target)
+        X, y, patientId= prepare_dataset(target)
+        predict_label, predict_contin = make_prediction(X,target)
         scores = calculate_score(y, predict_label)
         pred_result[target + "_label"] = predict_label
         pred_result[target + "_contin"] = predict_contin
