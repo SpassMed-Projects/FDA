@@ -25,7 +25,7 @@ LogisticRegression_param = {
     'solver'  : ['liblinear','saga']
     }
 
-LinearDiscriminan_param = {
+LinearDiscriminant_param = {
     'solver': ['svd', 'lsqr', 'eigen']
 }
 
@@ -38,7 +38,7 @@ DecisionTree_param = {
 
 RandomForest_param = {
     'criterion': ['gini', 'entropy'],
-    'max_depth': [2,4,6,8,10,12],
+    'max_depth': [2,4,6,8,10,12,None],
     'min_samples_split': [5,10,20], # prevent overfitting
     'min_samples_leaf': list(range(2,7,1)) #also used for prevent overfitting
 }
