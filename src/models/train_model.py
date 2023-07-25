@@ -50,7 +50,9 @@ from lightgbm import LGBMClassifier
 
 dict_data = {
     'readmission': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 
-    'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv'
+    'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv',
+    # "mortality": ,
+    "mortality_cvd": '/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv'
 }
 
 def prepare_dataset(target):
@@ -59,11 +61,18 @@ def prepare_dataset(target):
     data = pd.read_csv(path).iloc[:,1:]
    
     if target == "readmission":
-        X = data.drop(columns = ['CVD_readmission', 'readmission within 300 days'])
+        X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
         y = column_or_1d(data[['readmission within 300 days']])
+    elif target == "readmission_cvd":
+        X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
+        y = column_or_1d(data[['CVD_readmission']])
+    elif target == "mortality":
+        X = data.drop(columns = ['Internalpatientid', 'died within 125 days'])
+        y = column_or_1d(data[['died within 125 days']])
     else:
-        X = data.drop(columns = ['CVD_readmission', 'readmission within 300 days'])
-        y = column_or_1d(data[['died_within_900days']])
+        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
+        y = column_or_1d(data[['died_by_cvd']])
+        
 
     # # Split Train and Test (?? 似乎不用)
     # X_train_ad1, X_test_ad1, y_train_ad1, y_test_ad1 = train_test_split(X_admission1, Y_admission1, test_size=0.20, random_state=42)
@@ -88,7 +97,7 @@ def train_model(X,y,model_type):
         return LogisticRegression(**gsearch.best_params_)
 
     elif model_type=='LinearDiscriminant':
-        gsearch = LinearDiscriminant_Grid_CV(X,y,LinearDiscriminan_param)
+        gsearch = LinearDiscriminant_Grid_CV(X,y,LinearDiscriminant_param)
         print(gsearch.best_score_)
         return LinearDiscriminantAnalysis(**gsearch.best_params_)
 
@@ -115,6 +124,7 @@ def train_model(X,y,model_type):
 
     elif model_type=='LGBM':
         gsearch = LGBM_Grid_CV(X,y,LGBM_param)
+        print(gsearch.best_score_)
         return LGBMClassifier(**gsearch.best_params_)
 
     else: raise NotImplementedError

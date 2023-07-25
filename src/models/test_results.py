@@ -59,14 +59,15 @@ dict_target_info = {
     
 def prepare_dataset(target):
     # Import Data
-    path =  dict_target_info[target[0]]
+    path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
+    patientId = pd.DataFrame(data['Internalpatientid'])
 
     if target == "readmission":
-        X = data.drop(columns = ['readmission within 300 days', 'died_within_900days'])
+        X = data.drop(columns = ['readmission within 300 days', 'Internalpatientid','died_within_900days'])
         y = data[['readmission within 300 days']]
     else:
-        X = data.drop(columns = ['died_within_900days'])
+        X = data.drop(columns = ['died_within_900days','Internalpatientid'])
         y = data[['died_within_900days']]
 
     # # Split Train and Test (?? 似乎不用)
@@ -83,13 +84,13 @@ def prepare_dataset(target):
     sme = SMOTEENN(random_state=42)
     X, y = sme.fit_resample(X, y)
     
-    return X,y
+    return X,y,patientId
 
-def make_prediction(X,y,model_name):
-    clf = pickle.load(open(dict_model[model_name]), 'rb')
+def make_prediction(X,y,target):
+    clf = pickle.load(open(dict_target_info[target][1]), 'rb')
     predict_label = clf.predict(X)
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
-    return predict_label, predict_contin, y
+    return predict_label, predict_contin
 
 def calculate_score(y, predict_label):
     scores = [
@@ -107,21 +108,18 @@ def calculate_score(y, predict_label):
     ]
     return scores
 
-def statistics_metrics_df(model_name):
+def make_df(patientId):
+    statistics_metrics = 
+    pred_result = patientId
     for target in dict_target_info:
-         X,y = prepare_dataset(target)
-         predict_label, predict_contin, y = make_prediction(X,y,model_name)
-         scores = calculate_score(y, predict_label)
-
-
-if dataset_name == "quality":
-        path = 'quality_dataset_path'
-        data = pd.read_csv(path).iloc[:,1:]
-        X,y = prepare_dataset(data)
-    else:
-        path = 'test_dataset_path'
-        data = pd.read_csv(path).iloc[:,1:]
+        X,y = prepare_dataset(target)
+        predict_label, predict_contin = make_prediction(X,y,target)
+        scores = calculate_score(y, predict_label)
+        pred_result[target + " label"] = predict_label
+        pred_result[target + " continu"] = predict_label
         
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--isdev", help="run to test pipeline: 1 - True, 0 - False", type=int)
@@ -137,7 +135,7 @@ if __name__ == '__main__':
 
     X, y = prepare_dataset(args.target)
     predict_label, predict_contin, y = make_prediction(X,y,)
-    calculate_score(y, predict_label):
+    calculate_score(y, predict_label)
 
     filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
     pickle.dump(clf, open(filename, 'wb'))
