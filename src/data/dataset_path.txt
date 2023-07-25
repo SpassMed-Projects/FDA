@@ -47,6 +47,10 @@
 
 /home/daisy/FDA_Dataset/inpatient_CVD_final_test_2.csv: inpatient inpatient inner join other tables for CVD admission and mortality (test set)
 
+/home/daisy/FDA_Dataset/procedures_quality_admission.csv: procedures quality data set (quality set for readmission)
+
+/home/daisy/FDA_Dataset/inpatient_medications_ordered_quality_admission.csv: medication ordered quality data set (quality set for readmission)
+
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
@@ -77,3 +81,5 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
        'away_from_death' when training)
 
 /home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd) (all other columns can be treated as features)
+
+/home/hassan/lily/MLA/FDA/inpatient_simple_quality.csv: inpatient admission quality dataset (quality set for readmission)
