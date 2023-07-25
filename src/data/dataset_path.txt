@@ -76,3 +76,5 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: final inpatient clean dataset (target columns: CVD_readmission, readmission_within_30days)
 
 /home/hassan/lily/MLA/FDA/outpatient_mortality.csv: outpatient dataset for all-cause mortality (target column: died within 125 days)
+
+/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd)
