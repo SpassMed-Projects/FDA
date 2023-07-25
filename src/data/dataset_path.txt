@@ -35,6 +35,18 @@
 
 /home/daisy/FDA_Dataset/inpatient_all_final_2.csv: inpatient inner join other tables with 1656 missing values
 
+/home/daisy/FDA_Dataset/inpatient_CVD_final_1.csv: inpatient left join other tables for CVD admission and mortality
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_2.csv: inpatient inner join other tables for CVD admission and mortality
+
+/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv: inpatient left join other tables (test set)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv: inpatient inner join other tables for CVD admission and mortality (test set)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_test_2.csv: inpatient inner join other tables (test set)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_test_2.csv: inpatient inpatient inner join other tables for CVD admission and mortality (test set)
+
 /home/hassan/lily/MLA/FDA/inpatient_full_simple.csv: a subset of final inpatient clean dataset
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
@@ -50,6 +62,8 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/vivi/FDA_datasets/demographics_event_test.csv: demographics event for test set
 
 /home/vivi/FDA_datasets/inpatient_specialty_preprocessed_test.csv: inpatient_specialty for test set
+
+/home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed_test.csv: outpatient visits for test set
 
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
