@@ -51,6 +51,18 @@
 
 /home/daisy/FDA_Dataset/inpatient_medications_ordered_quality_admission.csv: medication ordered quality data set (quality set for readmission)
 
+/home/daisy/FDA_Dataset/immunization_quality_admission.csv: immunization quality data set for admission (quality)
+
+/home/daisy/FDA_Dataset/demographics_static_quality_admission.csv: demographic static quality data set for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv: inpatient quality data set left join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_1.csv: CVD inpatient quality data set left join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_2.csv:  inpatient quality data set inner join other data for admission (quality)
+
+/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_2.csv: CVD inpatient quality data set inner join other data for admission (quality)
+
 /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv: updated inpatient lab results
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed.csv: updated inpatient set from outpatient visits preprocessed
@@ -67,6 +79,14 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 /home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed_test.csv: outpatient visits for test set
 
+/home/vivi/FDA_datasets/inpatient_measurements_bp_quality_admission.csv: inpatient measurements bp quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/inpatient_specialty_quality_admission.csv: inpatient specialty quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/outpatient_state_quality_admission.csv: outpatient state quality data set for admission (quality)
+
+/home/vivi/FDA_datasets/demographics_event_quality_admission.csv: demographic event quality data set for admission (quality)
+
 /home/hassan/lily/MLA/FDA/inpatient_simple_test.csv: testset (a subset of final inpatient clean dataset)
 
 /home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv: testset (updated inpatient lab results)
@@ -81,3 +101,8 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
        'away_from_death' when training)
 
 /home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv: inpatient dataset for cvd mortality (target column: died by cvd) (all other columns can be treated as features)
+
+/home/hassan/lily/MLA/FDA/inpatient_simple_quality.csv: inpatient quality dataset for admission (quality)
+
+/home/hassan/lily/MLA/FDA/inpatient_lab_results_quality.csv: lab results quality dataset admission (quality)
+
