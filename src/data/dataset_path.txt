@@ -118,7 +118,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 /home/daisy/FDA_Dataset/final_cvd_mortality_train_2.csv: final train dataset (inner join) for cvd mortality (target column: died by cvd)
 
-/home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
+/home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv: final train dataset (left join) for allcause mortality (target column: died within 125 days)
 
 /home/daisy/FDA_Dataset/final_allcause_mortality_train_2.csv: final train dataset (inner join) for allcause mortality (target column: died within 125 days)
 
@@ -129,3 +129,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/daisy/FDA_Dataset/inpatient_medications_ordered_cvd_mortality_quality.csv:medication ordered quality data for cvd cause mortality (quality)
 
 /home/daisy/FDA_Dataset/inpatient_medications_ordered_allcause_mortality_quality.csv: medication ordered quality data for all cause mortality (quality)
+
+/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv: final test dataset (left join) for allcause mortality (target column: died within 125 days)
+
+/home/daisy/FDA_Dataset/final_allcause_mortality_test_2.csv: final test dataset (inner join) for allcause mortality (target column: died within 125 days)
