@@ -240,7 +240,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
     1. For admission :
 
 	inaptient_combined_quality_admission.ipynb: 
-
+	
 		1. All cause admission left join:
 		/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv
 
