@@ -136,6 +136,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 
 
+
 ############ Quality Data set ###############
 以下table，readmission, allcause_mortality, cvd_mortality各一张表
 其中 cvd_readmission & allcause_admission在整体合并的时候分
@@ -211,8 +212,13 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 三张主表：
     1. Inpatient:
+		admission:
 		inpatient_complete_quality_admission.ipynb
 		/home/hassan/lily/MLA/FDA/inpatient_simple_quality.csv
+		
+		cvd mortality:
+		/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality_quality.csv
+
 
 	[‘Internalpatientid', 'num_stays', 'stay_length', 'num_unique_units',
        'num_transfers', 'num_cvd_admission', 'CVD',
@@ -240,7 +246,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
     1. For admission :
 
 	inaptient_combined_quality_admission.ipynb: 
-	
+
 		1. All cause admission left join:
 		/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv
 
@@ -350,11 +356,17 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 三张主表：
     1. Inpatient:
+		for cvd mortality:
+		inpatient_cvd_mortality.ipynb
+		/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality.csv
+
+		for admission:
 		inpatient_complete.ipynb
 		/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv
 
 		
     1. Outpatient
+		for all cause mortality
 		outpatient_visits_preprocessing.ipynb
 		/home/vivi/FDA_datasets/outpatient_visits_preprocessed.csv
 
@@ -480,10 +492,16 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 
 三张主表：
     1. Inpatient:
+		for cvd mortality:
+		inpatient_cvd_mortality.ipynb
+		/home/hassan/lily/MLA/FDA/inpatient_cvd_mortality_test.csv
+
+		for admission:
 		inpatient_complete.ipynb
 		/home/hassan/lily/MLA/FDA/inpatient_simple_test.csv
-		
+
     1. Outpatient
+		for all cause mortality:
 		outpatient_visits_preprocessing_test.ipynb
 		/home/vivi/FDA_datasets/inpatient_outpatient_visits_preprocessed_test.csv
 		
@@ -526,5 +544,8 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 		
 		inner join
 		/home/daisy/FDA_Dataset/final_allcause_mortality_test_2.csv
+
+
+
 
 
