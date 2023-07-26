@@ -40,60 +40,113 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
-  def __init__(self):  
+  def __init__(self, feature_name = None):  
     self.targets = ['readmission within 300 days', 'died_within_900days']
     self.cat_cols = ['CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
             'Ethnicity_2', 'Races_0', 'Races_1', 'Races_2', 'Races_3', 
             'Ruca category encoded']
+    self.feature_name = feature_name
 
   def check_skewness(self, X):
-    numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols))
-    statusdf = pd.DataFrame()
-    statusdf['numeric_col'] = numeric_cols
-    transform = []
-    sknewness_before = []
-    kurtosis_before = []
-    std_before = []
-    
-    skewness_after = []
-    kurtosis_after = []
-    std_after = []
+    if self.feature_name is None:
+      numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols))
+      statusdf = pd.DataFrame()
+      statusdf['numeric_col'] = numeric_cols
+      transform = []
+      sknewness_before = []
+      kurtosis_before = []
+      std_before = []
+      
+      skewness_after = []
+      kurtosis_after = []
+      std_after = []
 
-    method = []
-    for i in numeric_cols:
-        if abs(X[i].skew()) > 1.96 and abs(X[i].kurtosis()) > 1.96:
-            transform.append('Yes')
-            sknewness_before.append(X[i].skew())
-            kurtosis_before.append(X[i].kurtosis())
-            std_before.append(X[i].std())
+      method = []
+      for i in numeric_cols:
+          if abs(X[i].skew()) > 1.96 and abs(X[i].kurtosis()) > 1.96:
+              transform.append('Yes')
+              sknewness_before.append(X[i].skew())
+              kurtosis_before.append(X[i].kurtosis())
+              std_before.append(X[i].std())
 
-            skewness_after.append(np.log1p(X[X[i] >= 0][i]).skew())
-            kurtosis_after.append(np.log1p(X[X[i] >= 0][i]).kurtosis())
-            std_after.append(np.log1p(X[X[i] >= 0][i]).std())
+              skewness_after.append(np.log1p(X[X[i] >= 0][i]).skew())
+              kurtosis_after.append(np.log1p(X[X[i] >= 0][i]).kurtosis())
+              std_after.append(np.log1p(X[X[i] >= 0][i]).std())
 
-            method.append('log')
-        else:
-            transform.append('No')
-            sknewness_before.append(X[i].skew())
-            kurtosis_before.append(X[i].kurtosis())
-            std_before.append(X[i].std())
+              method.append('log')
+          else:
+              transform.append('No')
+              sknewness_before.append(X[i].skew())
+              kurtosis_before.append(X[i].kurtosis())
+              std_before.append(X[i].std())
 
-            skewness_after.append(X[i].skew())
-            kurtosis_after.append(X[i].kurtosis())
-            std_after.append(X[i].std())
-            method.append(' ')
+              skewness_after.append(X[i].skew())
+              kurtosis_after.append(X[i].kurtosis())
+              std_after.append(X[i].std())
+              method.append(' ')
 
-    statusdf['transform'] = transform
-    statusdf['method'] = method
-    statusdf['sknewness_before'] = sknewness_before
-    statusdf['skewness_after'] = skewness_after
+      statusdf['transform'] = transform
+      statusdf['method'] = method
+      statusdf['sknewness_before'] = sknewness_before
+      statusdf['skewness_after'] = skewness_after
 
-    statusdf['kurtosis_before'] = kurtosis_before
-    statusdf['kurtosis_after'] = kurtosis_after
-    
-    statusdf['std_before'] = std_before
-    statusdf['std_after'] = std_after
-    return statusdf
+      statusdf['kurtosis_before'] = kurtosis_before
+      statusdf['kurtosis_after'] = kurtosis_after
+      
+      statusdf['std_before'] = std_before
+      statusdf['std_after'] = std_after
+      return statusdf
+    else:
+      numeric_cols = list(set(X.columns)- set(self.targets) - set(self.cat_cols))
+      statusdf = pd.DataFrame()
+      statusdf['numeric_col'] = numeric_cols
+      transform = []
+      sknewness_before = []
+      kurtosis_before = []
+      std_before = []
+      
+      skewness_after = []
+      kurtosis_after = []
+      std_after = []
+
+      method = []
+      feature_name = set(self.feature_name)
+      for i in numeric_cols:
+          i_log_scaled = i + "_log_rob_scaled"
+          if i_log_scaled in feature_name:
+              transform.append('Yes')
+              sknewness_before.append(X[i].skew())
+              kurtosis_before.append(X[i].kurtosis())
+              std_before.append(X[i].std())
+
+              skewness_after.append(np.log1p(X[X[i] >= 0][i]).skew())
+              kurtosis_after.append(np.log1p(X[X[i] >= 0][i]).kurtosis())
+              std_after.append(np.log1p(X[X[i] >= 0][i]).std())
+
+              method.append('log')
+          else:
+              transform.append('No')
+              sknewness_before.append(X[i].skew())
+              kurtosis_before.append(X[i].kurtosis())
+              std_before.append(X[i].std())
+
+              skewness_after.append(X[i].skew())
+              kurtosis_after.append(X[i].kurtosis())
+              std_after.append(X[i].std())
+              method.append(' ')
+
+      statusdf['transform'] = transform
+      statusdf['method'] = method
+      statusdf['sknewness_before'] = sknewness_before
+      statusdf['skewness_after'] = skewness_after
+
+      statusdf['kurtosis_before'] = kurtosis_before
+      statusdf['kurtosis_after'] = kurtosis_after
+      
+      statusdf['std_before'] = std_before
+      statusdf['std_after'] = std_after
+      return statusdf
+  
 
   def extract_log_col(self, X):
     statusdf = self.check_skewness(X)
@@ -144,6 +197,9 @@ class ImputeNumeric(BaseEstimator, TransformerMixin):
   def transform(self, X):
     missing_cols = X.columns[X.isna().any()].tolist()
     for colname in missing_cols:
-      X[colname].fillna((X[colname].mean()), inplace = True)
+      if pd.isna(X[colname]).sum() == len(X[colname]):
+         X[colname].fillna((0), inplace = True)
+      else:
+         X[colname].fillna((X[colname].mean()), inplace = True)
     return X
   

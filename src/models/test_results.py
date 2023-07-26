@@ -48,20 +48,19 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    # 'mortality': [],
-    # 'mortality_cvd':[],
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv','/home/vivi/FDA/models/DecisionTree_mortality_cvd.sav'],
     'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
-    # 'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', 'model_name']
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', '/home/vivi/FDA/models/RandomForest_readmission_cvd.sav']
   
 }
 
 
-def prepare_dataset(target):
+def prepare_dataset(target,feature_names):
     # Import Data
     path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
-    patientId = pd.DataFrame(data['Internalpatientid'])
-   
+    
     if target == "readmission":
         X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
         y = column_or_1d(data[['readmission within 300 days']])
@@ -77,16 +76,23 @@ def prepare_dataset(target):
     
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
                 ('StandardizeStandardScaler', Standardize(RobustScaler()))]
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
-    
-    return X,y,patientId
 
-def make_prediction(X,target):
-    clf = pickle.load(open(dict_target_info[target][1],'rb'))
+    X = X[feature_names]
+    return X,y
+
+def get_patientId(target):
+    path =  dict_target_info[target][0]
+    data = pd.read_csv(path).iloc[:,1:]
+    patientId = pd.DataFrame(data['Internalpatientid'])
+    return patientId
+   
+
+def make_prediction(X,target,clf):
     predict_label = clf.predict(X)
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
     return predict_label, predict_contin
@@ -119,15 +125,17 @@ def make_df():
                                        'Positive Likelihood Ratio',
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
-    X, y, patientId= prepare_dataset('readmission')
-    pred_result = patientId
+    pred_result = get_patientId("mortality")
     for target in dict_target_info:
-        X, y, patientId= prepare_dataset(target)
-        predict_label, predict_contin = make_prediction(X,target)
+        target_result = get_patientId(target)
+        clf = pickle.load(open(dict_target_info[target][1],'rb'))
+        X, y= prepare_dataset(target, clf.feature_names_in_)
+        predict_label, predict_contin = make_prediction(X,target,clf)
         scores = calculate_score(y, predict_label)
-        pred_result[target + "_label"] = predict_label
-        pred_result[target + "_contin"] = predict_contin
+        target_result[target + "_label"] = predict_label
+        target_result[target + "_contin"] = predict_contin
         statistics_metrics[target] = scores
+        pred_result = pred_result.merge(target_result, how='left')
     pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result.csv')
     statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics.csv')
 
