@@ -135,6 +135,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/daisy/FDA_Dataset/final_allcause_mortality_test_2.csv: final test dataset (inner join) for allcause mortality (target column: died within 125 days)
 
 
+
 ############ Quality Data set ###############
 以下table，readmission, allcause_mortality, cvd_mortality各一张表
 其中 cvd_readmission & allcause_admission在整体合并的时候分
@@ -184,6 +185,10 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 	/home/vivi/FDA_datasets/inpatient_specialty_quality_admission.csv
 
     5. Lab results:
+	lab_results_EDA.ipynb
+	admission:
+	/home/hassan/lily/MLA/FDA/inpatient_lab_results_quality.csv
+
 	cvd mortality:
 	/home/hassan/lily/MLA/FDA/lab_results_features_quality.csv
 
@@ -269,6 +274,130 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 		/home/daisy/FDA_Dataset/final_allcause_mortality_quality_2.csv
 
 
+
+
+############ Training Data set ###############
+以下table，readmission, allcause_mortality, cvd_mortality各一张表
+其中 cvd_readmission & allcause_admission在整体合并的时候分
+
+  1. procedures 
+	admission:
+	procedures_explore2.ipynb
+	/home/daisy/FDA_Dataset/inpatient_procedures_clean.csv
+
+	procedures_explore2_allcause_mortality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_procedures_clean_allcause_mortality.csv
+	
+	procedures_explore_cvd_mortality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_procedures_clean_cvd_mortality.csv
+
+    2. measurements blood pressure
+	admission:
+	measurements_blood_pressure_preprocessing.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_preprocessed.csv
+
+	measurements_blood_pressure_preprocessing_cvd_mortality.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_cvd_mortality.csv
+
+	measurements_blood_pressure_preprocessing_allcause_mortality.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_allcause_mortality.csv
+
+
+    3. Medication ordered
+	inpatient_medication_all_cause2.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_clean.csv
+	
+	inpatient_medication_all_cause2_allcause_mortality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_allcause_mortality.csv
+
+	inpatient_medication_all_cause_cvd_mortality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_cvd_mortality.csv
+
+
+    4. inpatient specialty
+	inpatient_specialty_preprocessingv2.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_preprocessed.csv
+
+	inpatient_specialty_preprocessingv2_allcause_mortality.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_allcause_mortality.csv
+
+	inpatient_specialty_preprocessing_cvd_mortality.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_preprocessed.csv
+
+    5. Lab results:
+	admission:
+	/home/hassan/lily/MLA/FDA/inpatient_lab_results.csv
+
+	cvd mortality:
+	/home/hassan/lily/MLA/FDA/lab_results_features.csv
+
+	 allcause mortality
+	/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality.csv
+
+
+以下table，处理一次可适用于 all targets
+    1. demo_event_preprocessing.ipynb
+	 /home/vivi/FDA_datasets/demographics_event_preprocessed.csv
+
+    2. demograph_static_clean.ipynb
+	/home/daisy/FDA_Dataset/demographics_static_clean.csv
+
+    3. immunization_explore.ipynb
+	/home/daisy/FDA_Dataset/immunization_clean.csv
+
+    4. patients_location_preprocessing.ipynb
+	/home/vivi/FDA_datasets/outpatient_state.csv
+
+三张主表：
+    1. Inpatient:
+		inpatient_complete.ipynb
+		/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv
+
+		
+    1. Outpatient
+		outpatient_visits_preprocessing.ipynb
+		/home/vivi/FDA_datasets/outpatient_visits_preprocessed.csv
+
+		
+
+    1. ed_visits
+
+
+合并(final data set)：
+    1. For admission :
+		inpatient_combined.ipynb
+
+		1. All cause admission left join:
+		/home/daisy/FDA_Dataset/inpatient_all_final_1.csv
+
+		2. All cause admission inner join
+		/home/daisy/FDA_Dataset/inpatient_all_final_2.csv
+
+		3. CVD admission left join
+		/home/daisy/FDA_Dataset/inpatient_CVD_final_1.csv
+
+		4. CVD admission inner join
+		/home/daisy/FDA_Dataset/inpatient_CVD_final_2.csv
+
+
+    2. For CVD mortality	
+		inpatient_combined_cvd_mortality_quality.ipynb
+
+		left join:
+		/home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv
+
+		inner join:
+		/home/daisy/FDA_Dataset/final_cvd_mortality_train_2.csv
+		
+    3. For all cause mortality
+		inpatient_combined_allcause_mortality.ipynb
+
+		left join
+		/home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv
+		
+		inner join
+		/home/daisy/FDA_Dataset/final_allcause_mortality_train_2.csv
+
 ################ Test set ######################
 
 以下table，readmission, allcause_mortality, cvd_mortality各一张表
@@ -316,8 +445,8 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 	inpatient_specialty_preprocessing_cvd_mortality_test.ipynb
 	/home/vivi/FDA_datasets/inpatient_specialty_cvd_mortality_preprocessed_test.csv
 
-	inpatient_medication_all_cause2_allcause_mortality_test.ipynb
-	/home/daisy/FDA_Dataset/inpatient_medications_ordered_allcause_mortality_test.csv
+	inpatient_specialty_preprocessingv2_allcause_mortality_test.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_allcause_mortality_test.csv
 
 	For admission:
 	inpatient_specialty_preprocessing_test.ipynb
@@ -330,7 +459,7 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 	/home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv	
 
 	cvd mortality:
-	/home/hassan/lily/MLA/FDA/lab_results_features.csv
+	/home/hassan/lily/MLA/FDA/lab_results_features_test.csv
 
 	 allcause mortality
 	/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_test.csv
@@ -397,3 +526,5 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 		
 		inner join
 		/home/daisy/FDA_Dataset/final_allcause_mortality_test_2.csv
+
+
