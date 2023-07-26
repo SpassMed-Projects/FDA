@@ -133,3 +133,137 @@ home/vivi/FDA_datasets/outpatient_state_test.csv: outpatient state for test set
 /home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv: final test dataset (left join) for allcause mortality (target column: died within 125 days)
 
 /home/daisy/FDA_Dataset/final_allcause_mortality_test_2.csv: final test dataset (inner join) for allcause mortality (target column: died within 125 days)
+
+
+############ Quality Data set ###############
+以下table，readmission, allcause_mortality, cvd_mortality各一张表
+其中 cvd_readmission & allcause_admission在整体合并的时候分
+
+  1. procedures 
+	procedures_explore_cvd_mortality_quality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_procedures_clean_cvd_mortality_qaulity.csv
+
+	procedures_explore2_allcause_mortality_quality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_procedures_clean_allcause_mortality_quality.csv
+	
+	procedures_quality_admission.ipynb
+	/home/daisy/FDA_Dataset/procedures_quality_admission.csv
+
+    2. measurements blood pressure
+
+	measurements_blood_pressure_preprocessing_allcause_mortality_quality.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_allcause_mortality_quality.csv
+
+	measurements_blood_pressure_preprocessing_cvd_mortality_quality.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_cvd_mortality_quality.csv	
+
+	measurements_blood_pressure_quality_admission.ipynb
+	/home/vivi/FDA_datasets/inpatient_measurements_bp_quality_admission.csv
+
+
+    3. Medication ordered
+
+	inpatient_medication_all_cause_cvd_mortality_quality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_cvd_mortality_quality.csv
+	
+	inpatient_medication_all_cause2_allcause_mortality_quality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_allcause_mortality_quality.csv
+
+	inpatient_medication_all_cause_quality.ipynb
+	/home/daisy/FDA_Dataset/inpatient_medications_ordered_quality_admission.csv
+
+
+    4. inpatient specialty
+	inpatient_specialty_preprocessing_cvd_mortality_quality.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_cvd_mortality_quality.csv
+
+	inpatient_specialty_preprocessingv2_allcause_mortality_quality.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_allcause_mortality_quality.csv
+
+	inpatient_specialty_preprocessingv2_quality_admission.ipynb
+	/home/vivi/FDA_datasets/inpatient_specialty_quality_admission.csv
+
+    5. Lab results:
+	cvd mortality:
+	/home/hassan/lily/MLA/FDA/lab_results_features_quality.csv
+
+	 allcause mortality
+	/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_quality.csv
+
+
+以下table，处理一次可适用于 all targets
+    1. demo_event_preprocessing_quality.ipynb
+	/home/vivi/FDA_datasets/demographics_event_quality_admission.csv
+
+    2. demographic_static_clean_quality.ipynb
+	/home/daisy/FDA_Dataset/demographics_static_quality_admission.csv
+
+    3. immunization_quality.ipynb
+	/home/daisy/FDA_Dataset/immunization_quality_admission.csv
+
+    4. patients_location_preprocessing_quality_admission.ipynb
+	/home/vivi/FDA_datasets/outpatient_state_quality_admission.csv
+
+三张主表：
+    1. Inpatient:
+		inpatient_complete_quality_admission.ipynb
+		/home/hassan/lily/MLA/FDA/inpatient_simple_quality.csv
+
+	[‘Internalpatientid', 'num_stays', 'stay_length', 'num_unique_units',
+       'num_transfers', 'num_cvd_admission', 'CVD',
+       'unique_admitting_specialty', 'unique_discharging_specialty',
+       'DOMICILIARY', 'MEDICINE', 'NHCU', 'NON-COUNT', 'OTHERS', 'PSYCHIATRY',
+       'SURGERY', 'Age 20-40', 'Age 40-60', 'Age 60-80', 'Age 80-100',
+       'Age 100-120', 'age_mean', 'age_std', 'age_min', 'age_max', 'stay_min',
+       'stay_max', 'stay_mean', 'stay_std', 'freq', 'Medical', 'Mental',
+       'Others_Specialty', 'Rehab', 'Gerontology', 'CVD_readmission',
+       'next_readmission_time', 'Discharge date',
+       'readmission within 300 days’]
+		
+    1. Outpatient
+		outpatient_visits_preprocessing_v3_quality.ipynb
+		/home/hassan/lily/MLA/FDA/outpatient_mortality_quality.csv
+		
+		[‘Internalpatientid', 'num_visits', 'CVD', 'last_visit_date',
+       		'Age 00-20', 'Age 20-40', 'Age 40-60', 'Age 60-80', 'Age 80-100',
+       		'Age 100-120', 'age_mean', 'age_std', 'freq’]
+
+    1. ed_visits
+
+
+合并(final data set)：
+    1. For admission :
+
+	inaptient_combined_quality_admission.ipynb: 
+
+		1. All cause admission left join:
+		/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv
+
+		2. All cause admission inner join
+		/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_2.csv
+
+		3. CVD admission left join
+		/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_1.csv
+	
+		4. CVD admission inner join
+		/home/daisy/FDA_Dataset/inpatient_CVD_final_quality_admission_2.csv
+
+
+    2. For CVD mortality	(measurement_bp有问题)
+		inpatient_combined_cvd_mortality_quality.ipynb
+
+		left join:
+		/home/daisy/FDA_Dataset/final_cvd_mortality_quality_1.csv
+
+		inner join:
+		/home/daisy/FDA_Dataset/final_cvd_mortality_quality_2.csv
+		
+		
+    3. For all cause mortality
+		inpatient_combined_allcause_mortality_quality.ipynb
+
+		left join
+		/home/daisy/FDA_Dataset/final_allcause_mortality_quality_1.csv
+		
+		inner join
+		/home/daisy/FDA_Dataset/final_allcause_mortality_quality_2.csv
