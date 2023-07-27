@@ -51,7 +51,7 @@ from sklearn.utils.validation import column_or_1d
 
 dict_target_info = {
     'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_quality_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_quality_1.csv','/home/vivi/FDA/models/LogisticRegression_mortality_cvd.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_quality_1.csv','/home/vivi/FDA/models/RandomForest_mortality_cvd.sav'],
     'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
     'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd.sav']
 }

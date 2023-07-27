@@ -141,10 +141,10 @@ if __name__ == '__main__':
 
     X, y = prepare_dataset(args.target)
 
-    # clf = train_model(X,y,args.model_type)
+    clf = train_model(X,y,args.model_type)
 
-    # filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
-    # pickle.dump(clf, open(filename, 'wb'))
+    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
+    pickle.dump(clf, open(filename, 'wb'))
   
 
     
