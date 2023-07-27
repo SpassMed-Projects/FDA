@@ -5,6 +5,9 @@ from tqdm.auto import tqdm
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
+import preprocess_data 
+
+reload(preprocess_data)
 
 # use as a parameter in class
 cardiovascular = ["Heart failure, unspecified", "Other heart failure",
@@ -849,3 +852,41 @@ def preprocess_lab_results_allcause_mortality(datatype):
     elif datatype == "test": 
         lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_test.csv")
         return "/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_test.csv"
+    
+
+
+def preprocessing_demographics(datatype):
+    '''
+    '''
+    if datatype == "train": demographics_event= pd.read_csv('/home/bhatti/dataset/VCHAMPS/demographics_event_train.csv').iloc[:,1:]
+    if datatype == "test": demographics_event= pd.read_csv('/data/public/MLA/VCHAMPS-Test/demographics_event_test.csv').iloc[:,1:]
+
+    demographics_event['Event date'] = demographics_event['Event date'].apply(preprocess_data.preprocess_time_string)
+
+    marital_status = {'Married': 0, 'Divorced': 1, 'Never married': 1, 'Separated': 1, 'Single': 1, 'Unknown': float('nan'), 'Widowed': 1, 'Not specified (no value)': float('nan')}
+    ruca_category = {'Urban': 0,  'Rural': 1, 'Highly rural': 2, 'Not specified': float('nan')}
+
+    demographics_event['Marital status encoded'] = preprocess_data.preprocess_substitute_categories(marital_status, 
+                                                                               demographics_event['Marital status'])
+    demographics_event['Ruca category encoded'] = preprocess_data.preprocess_substitute_categories(ruca_category, 
+                                                                               demographics_event['Ruca category'])
+    
+    # imputing ruca
+    if datatype == "train": outpatients_location = pd.read_csv('/home/vivi/FDA_datasets/outpatient_state.csv').iloc[:,1:]
+    if datatype == "test": outpatients_location = pd.read_csv('/home/vivi/FDA_datasets/outpatient_state_test.csv').iloc[:,1:]
+    demographics_event_location = demographics_event.merge(outpatients_location, how = 'left', on = 'Internalpatientid')
+    demographics_event_location = demographics_event_location.dropna(subset=['State'])
+    state_ruca = demographics_event_location.groupby('State')['Ruca category encoded'].agg(lambda x: x.value_counts().index[0]).reset_index()
+
+    for index, row in demographics_event_location.iterrows():
+        if pd.isna(row['Ruca category encoded']):
+            demographics_event_location.at[index, 'Ruca category encoded'] = state_ruca[state_ruca['State'] == row['State']]['Ruca category encoded']
+    
+    if datatype == "train": 
+        demographics_event_location.to_csv('/home/vivi/FDA_datasets/demographics_event_preprocessed.csv')
+        return '/home/vivi/FDA_datasets/demographics_event_preprocessed.csv'
+    if datatype == "test": 
+        demographics_event_location.to_csv('/home/vivi/FDA_datasets/demographics_event_test.csv')
+        return '/home/vivi/FDA_datasets/demographics_event_test.csv'
+
+    
