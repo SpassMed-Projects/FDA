@@ -1,16 +1,10 @@
 import pandas as pd
-
-
 import numpy as np
 import pandas as pd
-
 import seaborn as sns
-
 import matplotlib.pyplot as plt
 %matplotlib inline
-
 from datetime import datetime
-
 
 path = '/home/daisy/FDA_Dataset/demographics_static_clean.csv'
 demographic_static = pd.read_csv(path).iloc[:,1:]
@@ -23,6 +17,7 @@ medications_ordered = pd.read_csv(path).iloc[:,1:]
 
 path = '/home/daisy/FDA_Dataset/inpatient_procedures_clean.csv'
 procedures = pd.read_csv(path).iloc[:,1:]
+
 path = '/home/vivi/FDA_datasets/outpatient_visits_preprocessed.csv'
 outpatient_visits = pd.read_csv(path).iloc[:,1:]
 
@@ -38,6 +33,7 @@ outpatient_state = pd.read_csv(path).iloc[:,1:]
 
 path = '/home/vivi/FDA_datasets/inpatient_measurements_bp_preprocessed.csv'
 measurements_bp = pd.read_csv(path).iloc[:,1:]
+
 path = '/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv'
 inpatient = pd.read_csv(path).iloc[:,1:]
 
@@ -50,12 +46,10 @@ df1 = inpatient.merge(procedures, how = 'left', on = 'Internalpatientid')
 df2 = df1.merge(demographic_static, how = 'left', on = 'Internalpatientid')
 df3 = df2.merge(immunization, how = 'left', on = 'Internalpatientid')
 df4 = df3.merge(medications_ordered, how = 'left', on = 'Internalpatientid')
-
 df5 = df4.merge(inpatient_specialty, how = 'left', on = 'Internalpatientid')
 df6 = df5.merge(demographics_event, how = 'left', on = 'Internalpatientid')
 df7 = df6.merge(outpatient_state, how = 'left', on = 'Internalpatientid')
 df8 = df7.merge(measurements_bp, how = 'left', on = 'Internalpatientid')
-
 df = df8.merge(lab_results, how = 'left', on = 'Internalpatientid')
 
 inpatient_pid = set(inpatient['Internalpatientid'])
