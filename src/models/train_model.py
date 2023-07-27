@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
     clf = train_model(X,y,args.model_type)
 
-    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
+    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}_2.sav"
     pickle.dump(clf, open(filename, 'wb'))
   
 
