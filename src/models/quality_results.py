@@ -45,67 +45,73 @@ from sklearn import metrics   #Additional scklearn functions
 import xgboost as xgb
 from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
-from FDA.src.models.statistics_metrics import *
+from statistics_metrics import *
 from sklearn.utils.validation import column_or_1d
 
-dict_model = {
-    "modelname": "path"
-}
 
 dict_target_info = {
-    'mortality': [],
-    'mortality_cvd':[],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'modelname'],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 'model_name']
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_quality_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_quality_1.csv','/home/vivi/FDA/models/LogisticRegression_mortality_cvd.sav'],
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd.sav']
 }
 
-def prepare_dataset(target):
+
+def prepare_dataset(target,feature_names):
     # Import Data
     path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
-    patientId = pd.DataFrame(data['Internalpatientid'])
-   
+    
     if target == "readmission":
-        X = data.drop(columns = ['Internalpatientid'])
-        y = column_or_1d(data[['readmission within 300 days']])
+        X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
     elif target == "readmission_cvd":
         X = data.drop(columns = ['Internalpatientid'])
-        
+       
     elif target == "mortality":
         X = data.drop(columns = ['Internalpatientid'])
-        
     else:
-        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
-       
+        X = data.drop(columns = ['Internalpatientid'])
     
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis()),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
                 ('StandardizeStandardScaler', Standardize(RobustScaler()))]
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
-    
-    return X,patientId
 
-def make_prediction(X,target):
-    clf = pickle.load(open(dict_target_info[target][1]), 'rb')
+    X = X[feature_names]
+    return X
+
+def make_prediction(X,target,clf):
     predict_label = clf.predict(X)
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
     return predict_label, predict_contin
 
+def get_patientId(target):
+    path =  dict_target_info[target][0]
+    data = pd.read_csv(path).iloc[:,1:]
+    patientId = pd.DataFrame(data['Internalpatientid'])
+    return patientId
+
 def make_df():
-    X,y,patientId= prepare_dataset(target)
-    pred_result = patientId
+    pred_result = get_patientId("mortality")
     for target in dict_target_info:
-        predict_label, predict_contin = make_prediction(X,y,target)
-        pred_result[target + "_label"] = predict_label
-        pred_result[target + "_contin"] = predict_contin
+        print(target)
+        target_result = get_patientId(target)
+        clf = pickle.load(open(dict_target_info[target][1],'rb'))
+        X = prepare_dataset(target, clf.feature_names_in_)
+        predict_label, predict_contin = make_prediction(X,target,clf)
+        target_result[target + "_label"] = predict_label
+        target_result[target + "_contin"] = predict_contin
+        pred_result = pred_result.merge(target_result, how='left')
+    pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
   
-    pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result.csv')
+    pred_result.to_csv('/home/vivi/FDA/reports/quality_predict_result.csv')
     
 if __name__ == '__main__':
     make_df()
+    print("success")
 
     
     

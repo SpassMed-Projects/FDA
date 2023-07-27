@@ -45,7 +45,7 @@ from lightgbm import LGBMClassifier
 
 dict_data = {
     'readmission': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv', 
-    'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_all_final_1.csv',
+    'readmission_cvd': '/home/daisy/FDA_Dataset/inpatient_CVD_final_1.csv',
     "mortality": '/home/daisy/FDA_Dataset/final_allcause_mortality_train_1.csv',
     "mortality_cvd": '/home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv'
 }
@@ -65,7 +65,7 @@ def prepare_dataset(target):
         X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
         y = column_or_1d(data[['died_within_125days']])
     else:
-        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
+        X = data.drop(columns = ['Internalpatientid','died_by_cvd','Age at death'])
         y = column_or_1d(data[['died_by_cvd']])
         
 
@@ -78,10 +78,14 @@ def prepare_dataset(target):
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
+    unique, counts = np.unique(y, return_counts=True)
+    print(unique, counts)
 
     # Balance the dataset
     sme = SMOTEENN(random_state=42)
     X, y = sme.fit_resample(X, y)
+    unique, counts = np.unique(y, return_counts=True)
+    print(unique, counts)
     
     return X,y
 
@@ -137,10 +141,11 @@ if __name__ == '__main__':
 
     X, y = prepare_dataset(args.target)
 
-    clf = train_model(X,y,args.model_type)
+    # clf = train_model(X,y,args.model_type)
 
-    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
-    pickle.dump(clf, open(filename, 'wb'))
+    # filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}.sav"
+    # pickle.dump(clf, open(filename, 'wb'))
+  
 
     
     

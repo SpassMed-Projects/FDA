@@ -46,13 +46,11 @@ from statistics_metrics import *
 from sklearn.utils.validation import column_or_1d
 
 
-
 dict_target_info = {
     'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_train_1.csv','/home/vivi/FDA/models/DecisionTree_mortality_cvd.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/RandomForest_mortality_cvd.sav'],
     'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', '/home/vivi/FDA/models/RandomForest_readmission_cvd.sav']
-  
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd.sav']
 }
 
 
@@ -71,7 +69,8 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
         y = column_or_1d(data[['died_within_125days']])
     else:
-        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
+        print(target)
+        X = data.drop(columns = ['Internalpatientid','died_by_cvd','Age at death'])
         y = column_or_1d(data[['died_by_cvd']])
     
     # Transform Data
@@ -86,11 +85,10 @@ def prepare_dataset(target,feature_names):
     return X,y
 
 def get_patientId(target):
-    path =  dict_target_info[target][0]
+    path = dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
     patientId = pd.DataFrame(data['Internalpatientid'])
     return patientId
-   
 
 def make_prediction(X,target,clf):
     predict_label = clf.predict(X)
@@ -135,12 +133,16 @@ def make_df():
         target_result[target + "_label"] = predict_label
         target_result[target + "_contin"] = predict_contin
         statistics_metrics[target] = scores
-        pred_result = pred_result.merge(target_result, how='left')
+        print(predict_label)
+        pred_result = pred_result.merge(target_result, how='left', on = 'Internalpatientid')
+    
+    pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
     pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result.csv')
     statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics.csv')
 
 if __name__ == '__main__':
     make_df()
+    print('success')
 
     
     
