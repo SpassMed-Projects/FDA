@@ -700,12 +700,152 @@ def preprocess_outpatient_allcause_mortality(datatype):
 
 
 def preprocess_lab_results_cvd_mortality(datatype):
-    return
+    '''
+    Preprocessing lab_results dataset for target: cvd mortality
+    train: /home/hassan/lily/MLA/FDA/lab_results_features.csv
+    test: /home/hassan/lily/MLA/FDA/lab_results_features_test.csv
+    '''
+    if datatype == "train": dataset_path = '/home/bhatti/dataset/VCHAMPS/lab_results_train.csv'
+    if datatype == "test": dataset_path = '/data/public/MLA/VCHAMPS-Test/lab_results_test.csv'
+    lab = pd.read_csv(dataset_path, index_col=0, usecols=["Internalpatientid", "Age at lab test"])
+    lab = lab.reset_index()
+
+    # get frequency and count
+    lab_results_features = []
+    for ids, group in tqdm(lab.groupby("Internalpatientid")):
+        count = group["Age at lab test"].astype(str).apply(lambda x: x[:7]).nunique()
+        
+        min_age = group["Age at lab test"].min()
+        max_age = group["Age at lab test"].max()
+
+        freq = count/(math.floor(max_age - min_age) + 1)
+
+        age_mean = group["Age at lab test"].mean()
+        age_std = group["Age at lab test"].std()
+        if group["Age at lab test"].nunique() == 1: age_std = 0
+
+        df = pd.DataFrame(data={'Internalpatientid': [ids], 'lab_count': [count], 'lab_freq': [round(freq,2)],
+                                "lab_age_mean": age_mean, "lab_age_std": age_std})
+        
+        df = df.reset_index(drop=True)
+        lab_results_features.append(df)
+        
+    lab_results_features = pd.concat(lab_results_features)
+
+    if datatype == "train": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/lab_results_features.csv")
+        return "/home/hassan/lily/MLA/FDA/lab_results_features.csv"
+    if datatype == "test": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/lab_results_features_test.csv")
+        return "/home/hassan/lily/MLA/FDA/lab_results_features_test.csv"
+
 
 
 def preprocess_lab_results_readmission(datatype):
-    return
+    '''
+    train: /home/hassan/lily/MLA/FDA/inpatient_lab_results.csv
+    test: /home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv
+    '''
+    if datatype == "train":
+        path = '/home/bhatti/dataset/VCHAMPS/lab_results_train.csv'
+    elif datatype == "test":
+        path = '/data/public/MLA/VCHAMPS-Test/lab_results_test.csv'
+    else:
+        path = '/data/public/MLA/VCHAMPS-Quality/lab_results_qual.csv'
+
+    lab = pd.read_csv(path, index_col=0, usecols = ["Internalpatientid", "Age at lab test", "Lab test date"])
+    lab = lab.reset_index()
+    lab["Age at lab test"] = lab["Age at lab test"].astype(str).apply(lambda x: x[:7])
+    lab = lab.drop_duplicates()
+
+    if datatype == "train":
+        path = '/home/hassan/lily/MLA/FDA/inpatient_full_simple.csv'
+    elif datatype == "test":
+        path = '/home/hassan/lily/MLA/FDA/inpatient_simple_test.csv'
+        
+    inpatient = pd.read_csv(path).iloc[:,1:]
+    inpatient_combine = lab.merge(inpatient, how = 'left', on = 'Internalpatientid')
+
+    inpatient_combine2 = inpatient_combine.loc[inpatient_combine['Lab test date'] <= inpatient_combine['Discharge date']]
+
+    lab_results_features = []
+    for ids, group in tqdm(inpatient_combine2.groupby("Internalpatientid")):
+        group["Age at lab test"] = group["Age at lab test"].astype(float)
+        count = group["Age at lab test"].nunique()
+        
+        min_age = group["Age at lab test"].min()
+        max_age = group["Age at lab test"].max()
+        
+        freq = count/(math.floor(max_age - min_age) + 1)
+
+        age_mean = group["Age at lab test"].mean()
+        age_std = group["Age at lab test"].std()
+        if group["Age at lab test"].nunique() == 1: age_std = 0
+
+        df = pd.DataFrame(data={'Internalpatientid': [ids], 'lab_count': [count], 'lab_freq': [round(freq,2)],
+                                "lab_age_mean": age_mean, "lab_age_std": age_std})
+        
+        df = df.reset_index(drop=True)
+        lab_results_features.append(df)
+        
+    lab_results_features = pd.concat(lab_results_features)
+
+    if datatype == "train": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/inpatient_lab_results.csv")
+        return '/home/hassan/lily/MLA/FDA/inpatient_lab_results.csv'
+    elif datatype == "test": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv")
+        return "/home/hassan/lily/MLA/FDA/inpatient_lab_results_test.csv"
+
 
 
 def preprocess_lab_results_allcause_mortality(datatype):
-    return
+    if datatype == "train":
+        path = '/home/hassan/lily/MLA/FDA/outpatient_mortality.csv'
+    elif datatype == "test":
+        path = '/home/hassan/lily/MLA/FDA/outpatient_mortality_test.csv'
+    inpatient = pd.read_csv(path, index_col=0)
+
+    if datatype == "train":
+        path = '/home/bhatti/dataset/VCHAMPS/lab_results_train.csv'
+    elif datatype == "test":
+        path = '/data/public/MLA/VCHAMPS-Test/lab_results_test.csv'
+    else:
+        path = '/data/public/MLA/VCHAMPS-Quality/lab_results_qual.csv'
+
+    lab = pd.read_csv(path, index_col=0, usecols = ["Internalpatientid", "Age at lab test", "Lab test date"])
+    lab = lab.reset_index()
+    lab["Age at lab test"] = lab["Age at lab test"].astype(str).apply(lambda x: x[:7])
+
+    lab = lab.drop_duplicates()
+    inpatient_combine = lab.merge(inpatient, how = 'left', on = 'Internalpatientid')
+    inpatient_combine2 = inpatient_combine.loc[inpatient_combine['Lab test date'] <= inpatient_combine['last_visit_date']]
+
+    lab_results_features = []
+    for ids, group in tqdm(inpatient_combine2.groupby("Internalpatientid")):
+        group["Age at lab test"] = group["Age at lab test"].astype(float)
+        count = group["Age at lab test"].nunique()
+        
+        min_age = group["Age at lab test"].min()
+        max_age = group["Age at lab test"].max()
+        
+        freq = count/(math.floor(max_age - min_age) + 1)
+
+        age_mean = group["Age at lab test"].mean()
+        age_std = group["Age at lab test"].std()
+        if group["Age at lab test"].nunique() == 1: age_std = 0
+
+        df = pd.DataFrame(data={'Internalpatientid': [ids], 'lab_count': [count], 'lab_freq': [round(freq,2)],
+                                "lab_age_mean": age_mean, "lab_age_std": age_std})
+        
+        df = df.reset_index(drop=True)
+        lab_results_features.append(df)
+        
+    lab_results_features = pd.concat(lab_results_features)
+
+    if datatype == "train": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality.csv")
+        return "/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality.csv"
+    elif datatype == "test": 
+        lab_results_features.to_csv("/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_test.csv")
+        return "/home/hassan/lily/MLA/FDA/lab_results_allcause_mortality_test.csv"
