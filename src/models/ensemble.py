@@ -37,7 +37,7 @@ from lightgbm.sklearn import LGBMRegressor
 from sklearn.datasets import dump_svmlight_file
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
  
 from sklearn import metrics   #Additional scklearn functions
@@ -56,21 +56,20 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
+    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest"]
 
-    models = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest"]
-    predicted_all_label = pd.DataFrame(columns=models)
-    y = []
-    for m in models:
+    X, y = train_model.prepare_dataset(args.target)
+    models = []
+    for m in model_names:
         model_name = f"/home/vivi/FDA/models/{m}_{args.target}_2.sav"
         clf = pickle.load(open(model_name,'rb'))
 
-        X, y = prepare_dataset(args.target, clf.feature_names_in_)
-        target_result = get_patientId(args.target)
+        models.append((m, clf))
 
-        predict_label, predict_contin = make_prediction(X,args.target,clf)
-        predicted_all_label[m] = predict_label
-        print("accuracy score for model:", m, "and target:", args.target, get_F1score(y, predict_label))
-    
-    ensembled_target = predicted_all_label.mode(axis=1).iloc[:,0]
-    print(get_F1score(ensembled_target, y))
+    eclf = VotingClassifier(estimators=models, voting='soft')
+    eclf.fit(X,y)
+    predict_label, predict_contin = make_prediction(X,args.target,eclf)
+    print(get_F1score(predict_label, y))
+
+
     
