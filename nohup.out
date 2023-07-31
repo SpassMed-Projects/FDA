@@ -7,3 +7,11 @@
 /home/vivi/FDA/src/script/train_model.sh: line 26: syntax error: unexpected end of file
 /home/vivi/FDA/src/script/train_model.sh: line 25: unexpected EOF while looking for matching `"'
 /home/vivi/FDA/src/script/train_model.sh: line 26: syntax error: unexpected end of file
+src/script/train_model_adaboost.sh: line 3: /home/lily/FDA/src/logs/AdaBoost_mortality_cvd.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 4: /home/lily/FDA/src/logs/AdaBoost_mortality.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 5: /home/lily/FDA/src/logs/AdaBoost_readmission.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 6: /home/lily/FDA/src/logs/AdaBoost_readmission_cvd.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 3: /home/lily/FDA/src/logs/AdaBoost_mortality_cvd.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 4: /home/lily/FDA/src/logs/AdaBoost_mortality.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 5: /home/lily/FDA/src/logs/AdaBoost_readmission.py.log: No such file or directory
+src/script/train_model_adaboost.sh: line 6: /home/lily/FDA/src/logs/AdaBoost_readmission_cvd.py.log: No such file or directory
