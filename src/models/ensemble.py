@@ -62,9 +62,9 @@ statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
 
-def ensemble(target):
+def ensemble(target, voting):
 
-    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "LGBM"]
+    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "XGBoost"]
 
     X_train, y_train = train_model.prepare_dataset(target)
     models = []
@@ -73,7 +73,7 @@ def ensemble(target):
         model_name = f"/home/vivi/FDA/models/{m}_{target}_2.sav"
         clf = pickle.load(open(model_name,'rb'))
     
-        if m =="LGBM" or m == "XGBoost": 
+        if m =="LGBM": 
 
             X_test, y_test = test_results.prepare_dataset(target, clf.feature_name_)
 
@@ -82,13 +82,19 @@ def ensemble(target):
         weights.append(accuracy_score(y_test, predict_label))
         models.append((m, clf))
 
-    eclf = VotingClassifier(estimators=models, voting='hard', weights=weights)
-    eclf.fit(X_train,y_train)
-
-    X_test, y_test = test_results.prepare_dataset(target, eclf.feature_names_in_)
-
-    # predict_label, predict_contin = test_results.make_prediction(X_test,args.target,eclf)
-    predict_label = eclf.predict(X_test)
+    if voting == "hard":
+        eclf = VotingClassifier(estimators=models, voting='hard', weights=weights)
+        eclf.fit(X_train,y_train)
+        
+        X_test, y_test = test_results.prepare_dataset(target, eclf.feature_names_in_)
+        predict_label = eclf.predict(X_test)
+    else: 
+        eclf = VotingClassifier(estimators=models, voting='soft')
+        eclf.fit(X_train,y_train)
+        
+        X_test, y_test = test_results.prepare_dataset(target, eclf.feature_names_in_)
+        predict_label, predict_contin = test_results.make_prediction(X_test,target,eclf)
+    
     return test_results.calculate_score(y_test, predict_label)
 
 
@@ -96,8 +102,9 @@ if __name__ == '__main__':
     
     targets = ["mortality", "readmission", "readmission_cvd"]
 
-    for target in targets:
-        score = ensemble(target)
-        statistics_metrics[target] = score
-    statistics_metrics.to_csv("/home/vivi/FDA/reports/ensembled_test_statistics_metrics.csv")
+    for v in ["soft", "hard"]:
+        for target in targets:
+            score = ensemble(target, v)
+            statistics_metrics[target] = score
+        statistics_metrics.to_csv(f"/home/vivi/FDA/reports/{v}_ensembled_test_statistics_metrics.csv")
     

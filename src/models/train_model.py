@@ -122,7 +122,7 @@ def train_model(X,y,model_type):
     elif model_type=='AdaBoost':
         gsearch = AdaBoost_Grid_CV(X,y,AdaBoost_param)
         print(gsearch.best_score_)
-        return AdaBoostClassifier(**gsearch.best_params_).fit(X,y)
+        return gsearch.best_estimator_.fit(X,y)
 
     elif model_type=='LGBM':
         gsearch = LGBM_Grid_CV(X,y,LGBM_param)
