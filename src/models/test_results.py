@@ -47,10 +47,10 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/RandomForest_mortality_cvd.sav'],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd.sav']
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/LinearDiscriminant_mortality_cvd_2.sav'],
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
 }
 
 
@@ -70,9 +70,10 @@ def prepare_dataset(target,feature_names):
         y = column_or_1d(data[['died_within_125days']])
     else:
         print(target)
-        X = data.drop(columns = ['Internalpatientid','died_by_cvd','Age at death'])
+        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
     
+
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
                 ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
@@ -80,6 +81,8 @@ def prepare_dataset(target,feature_names):
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
+
+    X.fillna(0,inplace=True)
 
     X = X[feature_names]
     return X,y
@@ -133,12 +136,11 @@ def make_df():
         target_result[target + "_label"] = predict_label
         target_result[target + "_contin"] = predict_contin
         statistics_metrics[target] = scores
-        print(predict_label)
         pred_result = pred_result.merge(target_result, how='left', on = 'Internalpatientid')
     
     pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
-    pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result.csv')
-    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics.csv')
+    pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result_2.csv')
+    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_2.csv')
 
 if __name__ == '__main__':
     make_df()

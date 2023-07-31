@@ -65,7 +65,7 @@ def prepare_dataset(target):
         X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
         y = column_or_1d(data[['died_within_125days']])
     else:
-        X = data.drop(columns = ['Internalpatientid','died_by_cvd','Age at death'])
+        X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
         
 
@@ -80,12 +80,16 @@ def prepare_dataset(target):
     X = transform_pipeline.transform(X)
     unique, counts = np.unique(y, return_counts=True)
     print(unique, counts)
+    X.fillna(0,inplace=True)
 
     # Balance the dataset
     sme = SMOTEENN(random_state=42)
     X, y = sme.fit_resample(X, y)
     unique, counts = np.unique(y, return_counts=True)
     print(unique, counts)
+    
+    
+ 
     
     return X,y
 
