@@ -73,7 +73,6 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
     
-
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
                 ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
@@ -82,9 +81,8 @@ def prepare_dataset(target,feature_names):
 
     X = transform_pipeline.transform(X)
 
-    X.fillna(0,inplace=True)
-
     X = X[feature_names]
+
     return X,y
 
 def get_patientId(target):

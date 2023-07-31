@@ -30,7 +30,7 @@ from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
 from transformation import *    
 from grid_search_cv import *
 import train_model
-from test_results import *
+import test_results 
 from statistics_metrics import *
 import lightgbm as lgb
 from lightgbm.sklearn import LGBMRegressor
@@ -39,6 +39,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.preprocessing import MinMaxScaler
  
 from sklearn import metrics   #Additional scklearn functions
 
@@ -49,27 +50,54 @@ from statistics_metrics import *
 from sklearn.utils.validation import column_or_1d
 from sklearn.metrics import accuracy_score
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
-    parser.add_argument("--target", help="select target", type=str)
-    
-    args = parser.parse_args()
+statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
+                                       'Area under the Receiver Operating Characteristic (AUROC)',
+                                       'Overall Accuracy',
+                                       'Sum of Sensitivity and Specificity',
+                                       'Sensitivity',
+                                       'Specificity',
+                                       'Precision',
+                                       'Negative Predictive Value',
+                                       'Positive Likelihood Ratio',
+                                       'Negative Likelihood Ratio',
+                                       'F1 score'], columns=['statistics_metrics'])
 
-    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest"]
+def ensemble(target):
 
-    X, y = train_model.prepare_dataset(args.target)
+    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "LGBM"]
+
+    X_train, y_train = train_model.prepare_dataset(target)
     models = []
+    weights = []
     for m in model_names:
-        model_name = f"/home/vivi/FDA/models/{m}_{args.target}_2.sav"
+        model_name = f"/home/vivi/FDA/models/{m}_{target}_2.sav"
         clf = pickle.load(open(model_name,'rb'))
+    
+        if m =="LGBM" or m == "XGBoost": 
 
+            X_test, y_test = test_results.prepare_dataset(target, clf.feature_name_)
+
+        else: X_test, y_test = test_results.prepare_dataset(target, clf.feature_names_in_)
+        predict_label, predict_contin = test_results.make_prediction(X_test,target,clf)
+        weights.append(accuracy_score(y_test, predict_label))
         models.append((m, clf))
 
-    eclf = VotingClassifier(estimators=models, voting='soft')
-    eclf.fit(X,y)
-    predict_label, predict_contin = make_prediction(X,args.target,eclf)
-    print(get_F1score(predict_label, y))
+    eclf = VotingClassifier(estimators=models, voting='hard', weights=weights)
+    eclf.fit(X_train,y_train)
+
+    X_test, y_test = test_results.prepare_dataset(target, eclf.feature_names_in_)
+
+    # predict_label, predict_contin = test_results.make_prediction(X_test,args.target,eclf)
+    predict_label = eclf.predict(X_test)
+    return test_results.calculate_score(y_test, predict_label)
 
 
+if __name__ == '__main__':
+    
+    targets = ["mortality", "readmission", "readmission_cvd"]
+
+    for target in targets:
+        score = ensemble(target)
+        statistics_metrics[target] = score
+    statistics_metrics.to_csv("/home/vivi/FDA/reports/ensembled_test_statistics_metrics.csv")
     
