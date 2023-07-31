@@ -52,11 +52,18 @@ XGBoost_param = {
     'n_estimators': [50, 100]
 }
 
+# AdaBoost_param = {
+#     'learning_rate': [0.1, 0.01],
+#     'n_estimators': [50, 100],
+#     'base_estimator__max_depth': [3, 5, 7],
+#     'base_estimator__min_samples_leaf': [1,5,10]
+# }
+
 AdaBoost_param = {
-    'learning_rate': [0.1, 0.01],
-    'n_estimators': [50, 100],
-    'base_estimator__max_depth': [3, 5, 7],
-    'base_estimator__min_samples_leaf': [1,5,10]
+    'learning_rate': [0.1],
+    'n_estimators': [50],
+    'base_estimator__max_depth': [3],
+    'base_estimator__min_samples_leaf': [1]
 }
 
 LGBM_param = {

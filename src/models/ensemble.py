@@ -39,6 +39,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.preprocessing import MinMaxScaler
  
 from sklearn import metrics   #Additional scklearn functions
 
@@ -63,17 +64,25 @@ statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC
 
 def ensemble(target):
 
-    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "LGBM", "XGBoost"]
+    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "LGBM"]
 
     X_train, y_train = train_model.prepare_dataset(target)
     models = []
+    weights = []
     for m in model_names:
         model_name = f"/home/vivi/FDA/models/{m}_{target}_2.sav"
         clf = pickle.load(open(model_name,'rb'))
+    
+        if m =="LGBM" or m == "XGBoost": 
 
+            X_test, y_test = test_results.prepare_dataset(target, clf.feature_name_)
+
+        else: X_test, y_test = test_results.prepare_dataset(target, clf.feature_names_in_)
+        predict_label, predict_contin = test_results.make_prediction(X_test,target,clf)
+        weights.append(accuracy_score(y_test, predict_label))
         models.append((m, clf))
 
-    eclf = VotingClassifier(estimators=models, voting='hard')
+    eclf = VotingClassifier(estimators=models, voting='hard', weights=weights)
     eclf.fit(X_train,y_train)
 
     X_test, y_test = test_results.prepare_dataset(target, eclf.feature_names_in_)
