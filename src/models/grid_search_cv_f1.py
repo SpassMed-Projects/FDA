@@ -100,7 +100,7 @@ def LogisticRegression_Grid_CV(X_train,y_train, LogisticRegression_param):
 
 def LinearDiscriminant_Grid_CV(X_train,y_train, LinearDiscriminant_param):
     estimator = LinearDiscriminantAnalysis()
-    LinearDiscriminant_param['class_weight'] = [calculate_weights(y_train)]
+    # LinearDiscriminant_param['class_weight'] = [calculate_weights(y_train)]
     gsearch = GridSearchCV(estimator , param_grid = LinearDiscriminant_param, scoring='f1', cv=5)
     gsearch.fit(X_train, y_train)
     return gsearch
@@ -121,14 +121,14 @@ def RandomForest_Grid_CV(X_train,y_train, RandomForest_param):
 
 def XGBoost_Grid_CV(X_train,y_train, XGBoost_param):
     estimator = xgb.XGBClassifier()
-    XGBoost_param['class_weight'] = [calculate_weights(y_train)]
+    # XGBoost_param['class_weight'] = [calculate_weights(y_train)]
     gsearch = GridSearchCV(estimator , param_grid = XGBoost_param, scoring='f1', cv=5)
     gsearch.fit(X_train, y_train)
     return gsearch
 
 def AdaBoost_Grid_CV(X_train,y_train, AdaBoost_param):
     base = DecisionTreeClassifier()
-    AdaBoost_param['class_weight'] = [calculate_weights(y_train)]
+    # AdaBoost_param['class_weight'] = [calculate_weights(y_train)]
     estimator = AdaBoostClassifier(base_estimator = base)
     gsearch = GridSearchCV(estimator , param_grid = AdaBoost_param, scoring='f1', cv=5)
     gsearch.fit(X_train, y_train)
