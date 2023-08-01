@@ -64,7 +64,7 @@ statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC
 
 def ensemble(target, voting):
 
-    model_names = ["DecisionTree", "LinearDiscriminant", "LogisticRegression", "RandomForest", "XGBoost", "AdaBoost", "LGBM"]
+    model_names = ["AdaBoost"]
 
     X_train, y_train = train_model.prepare_dataset(target)
     models = []
