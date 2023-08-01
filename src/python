@@ -1,0 +1,3 @@
+usage: train_model_feature_selection.py [-h] [--model_type MODEL_TYPE]
+                                        [--target TARGET]
+train_model_feature_selection.py: error: unrecognized arguments: /home/daisy/FDA/src/logs/LGBM_mortality_cvd.py.log
