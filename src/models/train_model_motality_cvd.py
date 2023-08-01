@@ -29,7 +29,7 @@ import matplotlib.patches as mpatches
 from sklearn.metrics import mean_squared_error,r2_score
 from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
 from transformation import *    
-from grid_search_cv import *
+from grid_search_cv_f1 import *
 import lightgbm as lgb
 from lightgbm.sklearn import LGBMRegressor
 from sklearn.datasets import dump_svmlight_file
@@ -75,9 +75,9 @@ def prepare_dataset(target):
     print(unique, counts)
     X.fillna(0,inplace=True)
 
-    # Balance the dataset
-    sme = NearMiss()
-    X, y = sme.fit_resample(X, y)
+    # # Balance the dataset
+    # sme = NearMiss()
+    # X, y = sme.fit_resample(X, y)
     unique, counts = np.unique(y, return_counts=True)
     print(unique, counts)
 
@@ -136,7 +136,7 @@ if __name__ == '__main__':
 
     clf = train_model(X,y,args.model_type)
 
-    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}_undersampling.sav"
+    filename = f"/home/vivi/FDA/models/{args.model_type}_{args.target}_f1_class_weight.sav"
     pickle.dump(clf, open(filename, 'wb'))
 
     
