@@ -47,10 +47,10 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    #'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
     'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/RandomForest_mortality_cvd_undersampling.sav'],
-    #'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
-    #'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
 }
 
 
