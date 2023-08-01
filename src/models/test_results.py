@@ -47,10 +47,10 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/LinearDiscriminant_mortality_cvd_2.sav'],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
+    #'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/RandomForest_mortality_cvd_undersampling.sav'],
+    #'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
+    #'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
 }
 
 
@@ -80,6 +80,7 @@ def prepare_dataset(target,feature_names):
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
+    X.fillna(0, inplace=True)
 
     X = X[feature_names]
 
@@ -124,7 +125,7 @@ def make_df():
                                        'Positive Likelihood Ratio',
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
-    pred_result = get_patientId("mortality")
+    pred_result = get_patientId("mortality_cvd")
     for target in dict_target_info:
         target_result = get_patientId(target)
         clf = pickle.load(open(dict_target_info[target][1],'rb'))
@@ -136,9 +137,9 @@ def make_df():
         statistics_metrics[target] = scores
         pred_result = pred_result.merge(target_result, how='left', on = 'Internalpatientid')
     
-    pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
-    pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result_2.csv')
-    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_2.csv')
+    #pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
+    # pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result_mortality_cvd_2.csv')
+    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_mortality_cvd_undersampling_2.csv')
 
 if __name__ == '__main__':
     make_df()

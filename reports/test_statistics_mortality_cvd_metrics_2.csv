@@ -1,0 +1,12 @@
+,statistics_metrics,mortality_cvd
+0,Area under the precision recall curve (AUPRC),0.5041134786107137
+1,Area under the Receiver Operating Characteristic (AUROC),0.7171052147100501
+2,Overall Accuracy,0.559329140461216
+3,Sum of Sensitivity and Specificity,1.4342104294201004
+4,Sensitivity,0.8955532574974147
+5,Specificity,0.5386571719226857
+6,Precision,0.1066239842403349
+7,Negative Predictive Value,0.9882188265484662
+8,Positive Likelihood Ratio,1.941188207541254
+9,Negative Likelihood Ratio,0.1939020734278402
+10,F1 score,0.1905600176036968
