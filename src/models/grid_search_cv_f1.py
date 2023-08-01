@@ -36,7 +36,7 @@ DecisionTree_param = {
     'max_depth': [8,12,14,16],
     'min_samples_split': [20, 25, 30], # prevent overfitting
     'min_samples_leaf': list(range(2,7,1)), #also used for prevent overfitting
-    'n_jobs': -1,
+    'n_jobs': [-1],
     'random_state': [42]
 }
 
@@ -45,7 +45,7 @@ RandomForest_param = {
     'max_depth': [12,14,16,20,22],
     'min_samples_split': [3, 5, 7], # prevent overfitting
     'min_samples_leaf': list(range(2,7,1)), #also used for prevent overfitting
-    'n_jobs': -1,
+    'n_jobs': [-1],
     'n_estimators': [500,1000],
     'min_impurity_decrease': [0.0, 0.01, 0.02, 0.03],
     'random_state': [42]
@@ -58,7 +58,7 @@ XGBoost_param = {
     'subsample': [0.9, 1.0, 1.1],
     'colsample_bytree': [0.7, 0.8, 0.9],
     'n_estimators': [500, 1000],
-    'n_jobs': -1,
+    'n_jobs': [-1],
     'random_state': [42]
 }
 
@@ -78,7 +78,7 @@ LGBM_param = {
     'colsample_bytree': [0.5, 0.6, 0.7],
     'subsample': [0.5, 0.6, 0.7],
     'min_child_samples': [7, 10, 13],
-    'n_jobs': -1,
+    'n_jobs': [-1],
     'random_state': [42]
 }
 
@@ -115,7 +115,7 @@ def DecisionTree_Grid_CV(X_train,y_train, DecisionTree_param):
 def RandomForest_Grid_CV(X_train,y_train, RandomForest_param):
     estimator = RandomForestClassifier()
     RandomForest_param['class_weight'] = [calculate_weights(y_train)]
-    gsearch = GridSearchCV(estimator, n_estimator = 1000, param_grid = RandomForest_param, scoring='f1', cv=5)
+    gsearch = GridSearchCV(estimator, param_grid = RandomForest_param, scoring='f1', cv=5)
     gsearch.fit(X_train, y_train)
     return gsearch
 
