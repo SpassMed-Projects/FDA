@@ -130,7 +130,7 @@ def prepare_dataset(target):
                                 'stay_max',
                                 'stay_mean',
                                 'stay_min',
-                                'total_procedure','Ethnicity', 'Gender', 'Races', 'Ethnicity_1', 'Ethnicity_2', 'Races_1','Races_2', 'Races_3', 'Ruca category encoded']
+                                'total_procedure','CVD', 'Ethnicity', 'Gender', 'Races', 'Ethnicity_1', 'Ethnicity_2', 'Races_1','Races_2', 'Races_3', 'Ruca category encoded']
     mortality_features = ['Age 00-20',
                         'Age 100-120 hypertension',
                         'Age 20-40',
