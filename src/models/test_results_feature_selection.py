@@ -80,7 +80,7 @@ def prepare_dataset(target,feature_names):
     transform_pipeline = Pipeline(transform_steps)
 
     X = transform_pipeline.transform(X)
-
+    X.fillna(0,inplace=True)
     X = X[feature_names]
 
     return X,y
@@ -92,7 +92,6 @@ def get_patientId(target):
     return patientId
 
 def make_prediction(X,target,clf):
-    X.fillna(0,inplace=True)
     predict_label = clf.predict(X)
     predict_contin = [pair[1] for pair in clf.predict_proba(X)]
     return predict_label, predict_contin
