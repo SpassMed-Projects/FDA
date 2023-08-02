@@ -126,15 +126,28 @@ if __name__ == '__main__':
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
     for filename in os.listdir(directory):
-        if filename.endswith('feature_selection.sav'):
+        if filename.startswith("LGBM"):
+            continue
+        elif filename.endswith('feature_selection.sav'):
             with open(os.path.join(directory, filename),'rb') as f:
                 clf = pickle.load(f)
                 print(filename)
-                model_type,target = filename[:-22].split('_',1)
+                model_type,target= filename[:-22].split('_',1)
+                print(model_type,target)
                 X, y= prepare_dataset(target, clf.feature_names_in_)
                 predict_label, predict_contin = make_prediction(X,target,clf)
                 scores = calculate_score(y, predict_label)
-                statistics_metrics[model_type+"_"+target] = scores
+                statistics_metrics[model_type+"_"+target+"_feature_selection"] = scores
+        elif filename.endswith('2.sav'): 
+            with open(os.path.join(directory, filename),'rb') as f:
+                clf = pickle.load(f)
+                print(filename)
+                model_type,target= filename[:-6].split('_',1)
+                print(model_type,target)
+                X, y= prepare_dataset(target, clf.feature_names_in_)
+                predict_label, predict_contin = make_prediction(X,target,clf)
+                scores = calculate_score(y, predict_label)
+                statistics_metrics[model_type+"_"+target+"_2"] = scores
     statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_feature_selection_all.csv')
 
 

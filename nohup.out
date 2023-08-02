@@ -15,3 +15,6 @@ src/script/train_model_adaboost.sh: line 3: /home/lily/FDA/src/logs/AdaBoost_mor
 src/script/train_model_adaboost.sh: line 4: /home/lily/FDA/src/logs/AdaBoost_mortality.py.log: No such file or directory
 src/script/train_model_adaboost.sh: line 5: /home/lily/FDA/src/logs/AdaBoost_readmission.py.log: No such file or directory
 src/script/train_model_adaboost.sh: line 6: /home/lily/FDA/src/logs/AdaBoost_readmission_cvd.py.log: No such file or directory
+/home/vivi/FDA/src/script/train_model.sh: line 36: 619097 Killed                  python /home/vivi/FDA/src/models/train_model.py --target "readmission" --model_type "LGBM" > /home/vivi/FDA/src/logs/LGBM_readmission.py.log 2>&1
+/home/vivi/FDA/src/script/train_model.sh: line 37: 1333183 Killed                  python /home/vivi/FDA/src/models/train_model.py --target "mortality" --model_type "LGBM" > /home/vivi/FDA/src/logs/LGBM_mortality.py.log 2>&1
+/home/vivi/FDA/src/script/train_model.sh: line 38: 1335658 Terminated              python /home/vivi/FDA/src/models/train_model.py --target "readmission_cvd" --model_type "LGBM" > /home/vivi/FDA/src/logs/LGBM_readmission_cvd.py.log 2>&1

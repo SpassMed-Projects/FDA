@@ -197,7 +197,6 @@ class ImputeNumeric(BaseEstimator, TransformerMixin):
   def transform(self, X):
     missing_cols = X.columns[X.isna().any()].tolist()
     for colname in missing_cols:
-      print(colname)
       if pd.isna(X[colname]).sum() == len(X[colname]):
          X[colname].fillna((0), inplace = True)
       else:
