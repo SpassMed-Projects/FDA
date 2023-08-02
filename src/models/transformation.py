@@ -40,11 +40,17 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 class RemoveSkewnessKurtosis(BaseEstimator, TransformerMixin):
-  def __init__(self, feature_name = None):  
+  def __init__(self, feature_name = None, isLGBM=False):  
     self.targets = ['readmission within 300 days', 'died_within_900days']
-    self.cat_cols = ['CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
+    if isLGBM:
+       self.cat_cols = ['CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
+            'Ethnicity_2', 'Races_0', 'Races_1', 'Races_2', 'Races_3', 
+            'Ruca_category_encoded']
+    else:
+       self.cat_cols = ['CVD','Ethnicity', 'Gender', 'Races', 'Ethnicity_0', 'Ethnicity_1', 
             'Ethnicity_2', 'Races_0', 'Races_1', 'Races_2', 'Races_3', 
             'Ruca category encoded']
+    
     self.feature_name = feature_name
 
   def check_skewness(self, X):

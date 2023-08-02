@@ -55,7 +55,7 @@ dict_target_info = {
 }
 
 
-def prepare_dataset(target,feature_names):
+def prepare_dataset(target,feature_names,isLGBM=False):
     # Import Data
     path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
@@ -73,9 +73,13 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
     
+    if isLGBM:
+        for name in X.columns:
+            X = X.rename(columns = {name:name.replace(' ','_')})
+    
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names,isLGBM)),
                 ('StandardizeStandardScaler', Standardize(RobustScaler()))]
     transform_pipeline = Pipeline(transform_steps)
 
@@ -113,6 +117,8 @@ def calculate_score(y, predict_label):
     return scores
 
 if __name__ == '__main__':
+    
+
     directory = '/home/vivi/FDA/models'
     statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
                                        'Area under the Receiver Operating Characteristic (AUROC)',
@@ -126,15 +132,16 @@ if __name__ == '__main__':
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
     for filename in os.listdir(directory):
-        if filename.startswith("LGBM"):
-            continue
-        elif filename.endswith('feature_selection.sav'):
+        if filename.endswith('feature_selection.sav'):
             with open(os.path.join(directory, filename),'rb') as f:
                 clf = pickle.load(f)
                 print(filename)
                 model_type,target= filename[:-22].split('_',1)
-                print(model_type,target)
-                X, y= prepare_dataset(target, clf.feature_names_in_)
+                if filename.startswith("LGBM"):
+                   
+                    X, y= prepare_dataset(target, clf.feature_name_, True)
+                else:
+                    X, y= prepare_dataset(target, clf.feature_names_in_)
                 predict_label, predict_contin = make_prediction(X,target,clf)
                 scores = calculate_score(y, predict_label)
                 statistics_metrics[model_type+"_"+target+"_feature_selection"] = scores
@@ -143,8 +150,12 @@ if __name__ == '__main__':
                 clf = pickle.load(f)
                 print(filename)
                 model_type,target= filename[:-6].split('_',1)
-                print(model_type,target)
-                X, y= prepare_dataset(target, clf.feature_names_in_)
+                if filename.startswith("LGBM"):
+                    X, y= prepare_dataset(target, clf.feature_name_, True)
+                    
+                else:
+                    X, y= prepare_dataset(target, clf.feature_names_in_)
+                
                 predict_label, predict_contin = make_prediction(X,target,clf)
                 scores = calculate_score(y, predict_label)
                 statistics_metrics[model_type+"_"+target+"_2"] = scores

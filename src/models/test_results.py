@@ -54,7 +54,7 @@ dict_target_info = {
 }
 
 
-def prepare_dataset(target,feature_names):
+def prepare_dataset(target,feature_names,isLGBM=False):
     # Import Data
     path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
@@ -73,9 +73,14 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
     
+    if isLGBM:
+        for name in X.columns:
+            X = X.rename(columns = {name:name.replace(' ','_')})
+        
+    
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names,isLGBM)),
                 ('StandardizeStandardScaler', Standardize(RobustScaler()))]
     transform_pipeline = Pipeline(transform_steps)
 
@@ -113,7 +118,7 @@ def calculate_score(y, predict_label):
     ]
     return scores
 
-def make_df():
+def make_df(isLGBM):
     statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
                                        'Area under the Receiver Operating Characteristic (AUROC)',
                                        'Overall Accuracy',
@@ -129,7 +134,10 @@ def make_df():
     for target in dict_target_info:
         target_result = get_patientId(target)
         clf = pickle.load(open(dict_target_info[target][1],'rb'))
-        X, y= prepare_dataset(target, clf.feature_names_in_)
+        if isLGBM:
+            X, y= prepare_dataset(target, clf.feature_name_, args.isLGBM)
+        else:
+            X, y= prepare_dataset(target, clf.feature_names_in_, args.isLGBM)
         predict_label, predict_contin = make_prediction(X,target,clf)
         scores = calculate_score(y, predict_label)
         target_result[target + "_label"] = predict_label
@@ -142,7 +150,13 @@ def make_df():
     statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_mortality_cvd_undersampling_2.csv')
 
 if __name__ == '__main__':
-    make_df()
+    parser = argparse.ArgumentParser()
+    # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
+    parser.add_argument("--isLGBM", help="whether is LGBM model", type=bool, const=True, default=False)
+    
+    args = parser.parse_args()
+
+    make_df(args.isLGBM)
     print('success')
 
     
