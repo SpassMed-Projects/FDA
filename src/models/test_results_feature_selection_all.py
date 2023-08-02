@@ -44,6 +44,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from lightgbm import LGBMClassifier
 from statistics_metrics import *
 from sklearn.utils.validation import column_or_1d
+import os
 
 
 dict_target_info = {
@@ -69,7 +70,6 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
         y = column_or_1d(data[['died_within_125days']])
     else:
-        print(target)
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
     
@@ -112,7 +112,8 @@ def calculate_score(y, predict_label):
     ]
     return scores
 
-def make_df():
+if __name__ == '__main__':
+    directory = '/home/vivi/FDA/models'
     statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
                                        'Area under the Receiver Operating Characteristic (AUROC)',
                                        'Overall Accuracy',
@@ -124,24 +125,19 @@ def make_df():
                                        'Positive Likelihood Ratio',
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
-    pred_result = get_patientId("mortality")
-    for target in dict_target_info:
-        target_result = get_patientId(target)
-        clf = pickle.load(open(dict_target_info[target][1],'rb'))
-        X, y= prepare_dataset(target, clf.feature_names_in_)
-        predict_label, predict_contin = make_prediction(X,target,clf)
-        scores = calculate_score(y, predict_label)
-        target_result[target + "_label"] = predict_label
-        target_result[target + "_contin"] = predict_contin
-        statistics_metrics[target] = scores
-        pred_result = pred_result.merge(target_result, how='left', on = 'Internalpatientid')
-    
-    pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
-    pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result_2.csv')
-    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_feature_selection.csv')
+    for filename in os.listdir(directory):
+        if filename.endswith('feature_selection.sav'):
+            with open(os.path.join(directory, filename),'rb') as f:
+                clf = pickle.load(f)
+                print(filename)
+                model_type,target = filename[:-22].split('_',1)
+                X, y= prepare_dataset(target, clf.feature_names_in_)
+                predict_label, predict_contin = make_prediction(X,target,clf)
+                scores = calculate_score(y, predict_label)
+                statistics_metrics[model_type+"_"+target] = scores
+    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_feature_selection_all.csv')
 
-if __name__ == '__main__':
-    make_df()
+
     print('success')
 
     
