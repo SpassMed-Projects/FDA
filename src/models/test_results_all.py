@@ -119,7 +119,7 @@ def calculate_score(y, predict_label):
 if __name__ == '__main__':
     
 
-    directory = '/home/vivi/FDA/models'
+    directory = '/home/lily/FDA/models'
     statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
                                        'Area under the Receiver Operating Characteristic (AUROC)',
                                        'Overall Accuracy',
@@ -132,20 +132,30 @@ if __name__ == '__main__':
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
     for filename in os.listdir(directory):
-        if filename.endswith('feature_selection.sav'):
+        # if filename.endswith('feature_selection.sav'):
+        #     with open(os.path.join(directory, filename),'rb') as f:
+        #         clf = pickle.load(f)
+        #         print(filename)
+        #         model_type,target= filename[:-22].split('_',1)
+        #         if filename.startswith("LGBM"):
+                   
+        #             X, y= prepare_dataset(target, clf.feature_name_, True)
+        #         else:
+        #             X, y= prepare_dataset(target, clf.feature_names_in_)
+        #         predict_label, predict_contin = make_prediction(X,target,clf)
+        #         scores = calculate_score(y, predict_label)
+        #         statistics_metrics[model_type+"_"+target+"_feature_selection"] = scores
+        if filename.endswith('ensemble.sav'):
             with open(os.path.join(directory, filename),'rb') as f:
                 clf = pickle.load(f)
                 print(filename)
-                model_type,target= filename[:-22].split('_',1)
-                if filename.startswith("LGBM"):
-                   
-                    X, y= prepare_dataset(target, clf.feature_name_, True)
-                else:
-                    X, y= prepare_dataset(target, clf.feature_names_in_)
+                target = filename[:-18]
+                method = filename[-17:-13]
+                X, y= prepare_dataset(target, clf.feature_names_in_)
                 predict_label, predict_contin = make_prediction(X,target,clf)
                 scores = calculate_score(y, predict_label)
-                statistics_metrics[model_type+"_"+target+"_feature_selection"] = scores
-        elif filename.endswith('2.sav'): 
+                statistics_metrics[target+method+"_ensemble"] = scores
+        eli
             with open(os.path.join(directory, filename),'rb') as f:
                 clf = pickle.load(f)
                 print(filename)
@@ -158,7 +168,8 @@ if __name__ == '__main__':
                 
                 predict_label, predict_contin = make_prediction(X,target,clf)
                 scores = calculate_score(y, predict_label)
-                statistics_metrics[model_type+"_"+target+"_2"] = scores
+                statistics_metrics[model_type+"_"+target+"_"+filename[-4]] = scores
+
     statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_metrics_feature_selection_all.csv')
 
 

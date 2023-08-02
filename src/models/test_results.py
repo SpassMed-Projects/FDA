@@ -47,10 +47,10 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/LGBM_mortality_2.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/RandomForest_mortality_cvd_undersampling.sav'],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/LGBM_readmission_2.sav"],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd_2.sav']
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/XGBoost_mortality_2.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/XGBoost_mortality_cvd_2.sav'],
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/RandomForest_readmission_feature_selection.sav"],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/LGBM_readmission_cvd_2.sav']
 }
 
 
@@ -65,6 +65,8 @@ def prepare_dataset(target,feature_names,isLGBM=False):
     elif target == "readmission_cvd":
         X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
         y = column_or_1d(data[['CVD_readmission']])
+        for name in X.columns:
+            X = X.rename(columns = {name:name.replace(' ','_')})
     elif target == "mortality":
         X = data.drop(columns = ['Internalpatientid', 'died_within_125days'])
         y = column_or_1d(data[['died_within_125days']])
@@ -72,10 +74,7 @@ def prepare_dataset(target,feature_names,isLGBM=False):
         print(target)
         X = data.drop(columns = ['Internalpatientid','died_by_cvd'])
         y = column_or_1d(data[['died_by_cvd']])
-    
-    if isLGBM:
-        for name in X.columns:
-            X = X.rename(columns = {name:name.replace(' ','_')})
+            
         
     
     # Transform Data
@@ -118,7 +117,7 @@ def calculate_score(y, predict_label):
     ]
     return scores
 
-def make_df(isLGBM):
+def make_df():
     statistics_metrics = pd.DataFrame(['Area under the precision recall curve (AUPRC)',
                                        'Area under the Receiver Operating Characteristic (AUROC)',
                                        'Overall Accuracy',
@@ -130,33 +129,31 @@ def make_df(isLGBM):
                                        'Positive Likelihood Ratio',
                                        'Negative Likelihood Ratio',
                                        'F1 score'], columns=['statistics_metrics'])
-    pred_result = get_patientId("mortality_cvd")
+    pred_result = get_patientId("mortality")
     for target in dict_target_info:
         target_result = get_patientId(target)
         clf = pickle.load(open(dict_target_info[target][1],'rb'))
-        if isLGBM:
-            X, y= prepare_dataset(target, clf.feature_name_, args.isLGBM)
+        if target == 'readmission_cvd':
+            X, y= prepare_dataset(target, clf.feature_name_, True)
         else:
-            X, y= prepare_dataset(target, clf.feature_names_in_, args.isLGBM)
+            X, y= prepare_dataset(target, clf.feature_names_in_)
         predict_label, predict_contin = make_prediction(X,target,clf)
         scores = calculate_score(y, predict_label)
         target_result[target + "_label"] = predict_label
         target_result[target + "_contin"] = predict_contin
         statistics_metrics[target] = scores
         pred_result = pred_result.merge(target_result, how='left', on = 'Internalpatientid')
+        
+    pred_result["readmission_mortality_label"] = pred_result["readmission_label"]+pred_result["mortality_label"]
     
-    #pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
-    # pred_result.to_csv('/home/vivi/FDA/reports/test_predict_result_mortality_cvd_2.csv')
-    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics_mortality_cvd_undersampling_2.csv')
+    pred_result["readmission_mortality_contin"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
+    pred_result.fillna(0,inplace=True)
+    pred_result.to_csv('/home/vivi/FDA/reports/test_predict.csv')
+    statistics_metrics.to_csv('/home/vivi/FDA/reports/test_statistics.csv')
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    # Ideally target should be readmission, readmission_cvd, motality, motality_cvd
-    parser.add_argument("--isLGBM", help="whether is LGBM model", type=bool, const=True, default=False)
-    
-    args = parser.parse_args()
 
-    make_df(args.isLGBM)
+    make_df()
     print('success')
 
     

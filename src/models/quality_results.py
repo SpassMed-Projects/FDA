@@ -50,14 +50,13 @@ from sklearn.utils.validation import column_or_1d
 
 
 dict_target_info = {
-    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_quality_1.csv','/home/vivi/FDA/models/RandomForest_mortality.sav'],
-    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_quality_1.csv','/home/vivi/FDA/models/RandomForest_mortality_cvd.sav'],
-    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', "/home/vivi/FDA/models/LinearDiscriminant_readmission.sav"],
-    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_all_final_quality_admission_1.csv', '/home/vivi/FDA/models/DecisionTree_readmission_cvd.sav']
+    'mortality': ['/home/daisy/FDA_Dataset/final_allcause_mortality_test_1.csv','/home/vivi/FDA/models/XGBoost_mortality_2.sav'],
+    'mortality_cvd':['/home/daisy/FDA_Dataset/final_cvd_mortality_test_1.csv', '/home/vivi/FDA/models/XGBoost_mortality_cvd_2.sav'],
+    'readmission': ['/home/daisy/FDA_Dataset/inpatient_all_final_test_1.csv', "/home/vivi/FDA/models/RandomForest_readmission_feature_selection.sav"],
+    'readmission_cvd': ['/home/daisy/FDA_Dataset/inpatient_CVD_final_test_1.csv', '/home/vivi/FDA/models/LGBM_readmission_cvd_2.sav']
 }
 
-
-def prepare_dataset(target,feature_names):
+def prepare_dataset(target,feature_names,isLGBM=False):
     # Import Data
     path =  dict_target_info[target][0]
     data = pd.read_csv(path).iloc[:,1:]
@@ -66,15 +65,18 @@ def prepare_dataset(target,feature_names):
         X = data.drop(columns = ['Internalpatientid', 'CVD_readmission', 'readmission within 300 days'])
     elif target == "readmission_cvd":
         X = data.drop(columns = ['Internalpatientid'])
+        for name in X.columns:
+            X = X.rename(columns = {name:name.replace(' ','_')})
        
     elif target == "mortality":
         X = data.drop(columns = ['Internalpatientid'])
+
     else:
         X = data.drop(columns = ['Internalpatientid'])
     
     # Transform Data
     transform_steps = [("ImputeNumeric", ImputeNumeric()),
-                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names)),
+                ('RemoveSkewnessKurtosis', RemoveSkewnessKurtosis(feature_names,isLGBM)),
                 ('StandardizeStandardScaler', Standardize(RobustScaler()))]
     transform_pipeline = Pipeline(transform_steps)
 
@@ -100,13 +102,17 @@ def make_df():
         print(target)
         target_result = get_patientId(target)
         clf = pickle.load(open(dict_target_info[target][1],'rb'))
-        X = prepare_dataset(target, clf.feature_names_in_)
+        if target == 'readmission_cvd':
+            X= prepare_dataset(target, clf.feature_name_,True)
+        else:
+            X= prepare_dataset(target, clf.feature_names_in_)
         predict_label, predict_contin = make_prediction(X,target,clf)
         target_result[target + "_label"] = predict_label
         target_result[target + "_contin"] = predict_contin
         pred_result = pred_result.merge(target_result, how='left')
-    pred_result["readmission_mortality"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
-  
+    pred_result["readmission_mortality_label"] = pred_result["readmission_label"]+pred_result["mortality_label"]
+    pred_result["readmission_mortality_contin"] = pred_result["readmission_contin"]+pred_result["mortality_contin"]
+    pred_result.fillna(0,inplace=True)
     pred_result.to_csv('/home/vivi/FDA/reports/quality_predict_result.csv')
     
 if __name__ == '__main__':
